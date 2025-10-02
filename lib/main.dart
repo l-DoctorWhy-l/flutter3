@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'points_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -137,10 +138,14 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                       child: Container(
                         height: 60,
                         margin: const EdgeInsets.only(right: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Навигация на экран очков
-                          },
+                         child: ElevatedButton(
+                           onPressed: () async {
+                             await Navigator.push(
+                               context,
+                               MaterialPageRoute(builder: (context) => const PointsScreen()),
+                             );
+                             setState(() {});
+                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
