@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'points_screen.dart';
+import 'number_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -158,10 +159,14 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                       child: Container(
                         height: 60,
                         margin: const EdgeInsets.only(left: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Навигация на экран номера
-                          },
+                         child: ElevatedButton(
+                           onPressed: () async {
+                             await Navigator.push(
+                               context,
+                               MaterialPageRoute(builder: (context) => const NumberScreen()),
+                             );
+                             setState(() {});
+                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
