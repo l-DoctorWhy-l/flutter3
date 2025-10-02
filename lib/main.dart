@@ -29,32 +29,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
 
         title: Text(widget.title),
       ),
       body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Widget with some text',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+        child: ElevatedButton(
+          onPressed: null,
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.blue),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              textAlign: TextAlign.center,
             ),
-          ],
+          ),
+          child: const Text(
+            'Какая-то кнопка',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
