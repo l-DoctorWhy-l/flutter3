@@ -55,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
               textAlign: TextAlign.center,
             ),
 
+            const SizedBox(width: 20),
+
             ElevatedButton(
               onPressed: null,
               style: ButtonStyle(
