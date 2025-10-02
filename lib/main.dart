@@ -10,74 +10,201 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Статистика баскетболиста',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const PlayerProfileScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+class PlayerData {
+  static String playerName = 'Кварталов Егор Алексеевич';
+  static int playerNumber = 22;
+  static int totalPoints = 0;
+  static int assists = 0;
+  static bool isInjured = false;
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class PlayerProfileScreen extends StatefulWidget {
+  const PlayerProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<PlayerProfileScreen> createState() => _PlayerProfileScreenState();
+}
 
+class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
+        backgroundColor: Colors.orange,
+        title: const Text(
+          'Профиль игрока',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Center(
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            const Text(
-              'Widget with some text',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Text(
+              PlayerData.playerName,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.center,
             ),
-
-            const SizedBox(width: 20),
-
-            ElevatedButton(
-              onPressed: null,
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(Colors.blue),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
-                ),
+            const SizedBox(height: 30),
+            
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.orange, width: 2),
               ),
-              child: Padding(
-                  padding: EdgeInsets.all(12),
-                child: const Text(
-                  'Какая-то кнопка',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                children: [
+                  const Text(
+                    'Статистика игрока',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                    ),
                   ),
+                  const SizedBox(height: 20),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Номер игрока:', style: TextStyle(fontSize: 18)),
+                      Text(
+                          '${PlayerData.playerNumber}',
+                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Общие очки:', style: TextStyle(fontSize: 18)),
+                      Text(
+                          '${PlayerData.totalPoints}',
+                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Ассисты:', style: TextStyle(fontSize: 18)),
+                      Text(
+                          '${PlayerData.assists}',
+                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Статус:', style: TextStyle(fontSize: 18)),
+                      Text(
+                          PlayerData.isInjured ? 'Травмирован' : 'Здоров',
+                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+            
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        margin: const EdgeInsets.only(right: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // TODO: Навигация на экран очков
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Управление очками'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // TODO: Навигация на экран номера
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Смена номера'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              )
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        margin: const EdgeInsets.only(right: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // TODO: Навигация на экран ассистов
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Ассисты'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // TODO: Навигация на экран травмы
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Статус травмы'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
