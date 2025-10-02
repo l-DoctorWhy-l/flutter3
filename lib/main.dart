@@ -67,14 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              child: const Text(
+              child: Padding(
+                  padding: EdgeInsets.all(12),
+                child: const Text(
                   'Какая-то кнопка',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+              )
             ),
           ],
         ),
