@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'points_screen.dart';
 import 'number_screen.dart';
 import 'assists_screen.dart';
+import 'injury_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -205,10 +206,14 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                       child: Container(
                         height: 60,
                         margin: const EdgeInsets.only(left: 10),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Навигация на экран травмы
-                          },
+                         child: ElevatedButton(
+                           onPressed: () async {
+                             await Navigator.push(
+                               context,
+                               MaterialPageRoute(builder: (context) => const InjuryScreen()),
+                             );
+                             setState(() {});
+                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
                             foregroundColor: Colors.white,
