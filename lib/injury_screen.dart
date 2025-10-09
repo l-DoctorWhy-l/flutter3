@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'injury_record.dart';
 
 class InjuryScreen extends StatefulWidget {
   const InjuryScreen({super.key});
@@ -12,7 +13,26 @@ class _InjuryScreenState extends State<InjuryScreen> {
   void _toggleInjuryStatus() {
     setState(() {
       PlayerData.isInjured = !PlayerData.isInjured;
+        PlayerData.injuryHistory.add(
+          InjuryRecord(
+            isInjured: PlayerData.isInjured,
+            timestamp: DateTime.now(),
+          ),
+        );
     });
+  }
+
+  void _removeLastInjuryRecord() {
+    if (PlayerData.injuryHistory.isNotEmpty) {
+      setState(() {
+        PlayerData.injuryHistory.removeLast();
+        if (PlayerData.injuryHistory.isNotEmpty) {
+          PlayerData.isInjured = PlayerData.injuryHistory.last.isInjured;
+        } else {
+          PlayerData.isInjured = false;
+        }
+      });
+    }
   }
 
   @override
@@ -27,14 +47,13 @@ class _InjuryScreenState extends State<InjuryScreen> {
         automaticallyImplyLeading: false,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: double.infinity,
-              height: 50,
-              margin: const EdgeInsets.only(bottom: 30),
+              height: 40,
+              margin: const EdgeInsets.only(bottom: 15),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -45,33 +64,33 @@ class _InjuryScreenState extends State<InjuryScreen> {
                 ),
                 child: const Text(
                   'Назад',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.purple, width: 3),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.purple, width: 2),
               ),
               child: Column(
                 children: [
                   const Text(
                     'Текущий статус',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.purple,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Text(
                     PlayerData.isInjured ? 'Травмирован' : 'Здоров',
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: PlayerData.isInjured ? Colors.red : Colors.green,
                     ),
@@ -79,11 +98,11 @@ class _InjuryScreenState extends State<InjuryScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             
             SizedBox(
               width: double.infinity,
-              height: 70,
+              height: 50,
               child: ElevatedButton(
                 onPressed: _toggleInjuryStatus,
                 style: ElevatedButton.styleFrom(
@@ -92,7 +111,114 @@ class _InjuryScreenState extends State<InjuryScreen> {
                 ),
                 child: Text(
                   PlayerData.isInjured ? 'Восстановился' : 'Получил травму',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.purple, width: 2),
+                ),
+                child: Column(
+                  children: [
+                    const Text(
+                      'История травм',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    
+                    Expanded(
+                      child: PlayerData.injuryHistory.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'История пуста',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: PlayerData.injuryHistory.length,
+                              itemBuilder: (context, index) {
+                                InjuryRecord record = PlayerData.injuryHistory[index];
+                                
+                                return Container(
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.only(bottom: 6),
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(color: Colors.grey[300]!),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Запись ${index + 1}:',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Text(
+                                            record.statusText,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: record.isInjured ? Colors.red : Colors.green,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Время: ${record.fullTimestamp}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                    
+                    const SizedBox(height: 10),
+                    
+                    SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: PlayerData.injuryHistory.isNotEmpty ? _removeLastInjuryRecord : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text(
+                          'Удалить последнюю запись',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

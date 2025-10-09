@@ -3,6 +3,7 @@ import 'points_screen.dart';
 import 'number_screen.dart';
 import 'assists_screen.dart';
 import 'injury_screen.dart';
+import 'injury_record.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,7 @@ class PlayerData {
   static int assists = 0;
   static bool isInjured = false;
   static List<int> pointsHistory = [];
+  static List<InjuryRecord> injuryHistory = [];
 }
 
 class PlayerProfileScreen extends StatefulWidget {
