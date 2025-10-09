@@ -29,6 +29,7 @@ class PlayerData {
   static int totalPoints = 0;
   static int assists = 0;
   static bool isInjured = false;
+  static List<int> pointsHistory = [];
 }
 
 class PlayerProfileScreen extends StatefulWidget {
