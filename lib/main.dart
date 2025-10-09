@@ -4,6 +4,7 @@ import 'number_screen.dart';
 import 'assists_screen.dart';
 import 'injury_screen.dart';
 import 'injury_record.dart';
+import 'assist_record.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +33,7 @@ class PlayerData {
   static bool isInjured = false;
   static List<int> pointsHistory = [];
   static List<InjuryRecord> injuryHistory = [];
+  static List<AssistRecord> assistsHistory = [];
 }
 
 class PlayerProfileScreen extends StatefulWidget {
