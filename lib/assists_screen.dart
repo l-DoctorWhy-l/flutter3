@@ -16,16 +16,17 @@ class _AssistsScreenState extends State<AssistsScreen> {
       PlayerData.assistsHistory.add(
         AssistRecord(
           timestamp: DateTime.now(),
+          key: ValueKey(DateTime.now().millisecondsSinceEpoch),
         ),
       );
     });
   }
 
-  void _removeLastAssist() {
-    if (PlayerData.assistsHistory.isNotEmpty) {
+  void _removeAssist(int index) {
+    if (PlayerData.assistsHistory.isNotEmpty && index < PlayerData.assistsHistory.length) {
       setState(() {
-        PlayerData.assistsHistory.removeLast();
-        PlayerData.assists -= 1;
+        PlayerData.assistsHistory.removeAt(index);
+        PlayerData.assists = PlayerData.assistsHistory.length;
       });
     }
   }
@@ -144,52 +145,65 @@ class _AssistsScreenState extends State<AssistsScreen> {
                                 ),
                               ),
                             )
-                          : ListView.separated(
+                          : ListView.builder(
                               itemCount: PlayerData.assistsHistory.length,
-                              separatorBuilder: (context, index) => const SizedBox(height: 6),
                               itemBuilder: (context, index) {
                                 AssistRecord record = PlayerData.assistsHistory[index];
-                                
-                                return Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(color: Colors.grey[300]!),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Ассист ${index + 1}:',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
+
+                                return GestureDetector(
+                                  key: record.key,
+                                  onTap: () => _removeAssist(index),
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.only(bottom: 6),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: Colors.grey[300]!),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Ассист ${index + 1}:',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
-                                          ),
-                                          const Text(
-                                            '+1 ассист',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.green,
+                                            const Text(
+                                              '+1 ассист',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Время: ${record.fullTimestamp}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Время: ${record.fullTimestamp}',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        const Text(
+                                          'Нажмите для удаления',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.red,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -202,7 +216,13 @@ class _AssistsScreenState extends State<AssistsScreen> {
                       width: double.infinity,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: PlayerData.assistsHistory.isNotEmpty ? _removeLastAssist : null,
+                        onPressed: PlayerData.assistsHistory.isNotEmpty 
+                            ? () {
+                                if (PlayerData.assistsHistory.isNotEmpty) {
+                                  _removeAssist(PlayerData.assistsHistory.length - 1);
+                                }
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                           foregroundColor: Colors.white,
