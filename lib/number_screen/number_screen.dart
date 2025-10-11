@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main_screen/main.dart';
 
 class NumberScreen extends StatefulWidget {
   const NumberScreen({super.key});

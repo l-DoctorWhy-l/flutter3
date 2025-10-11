@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main_screen/main.dart';
+import 'assist_record.dart';
 
-class PointsScreen extends StatefulWidget {
-  const PointsScreen({super.key});
+class AssistsScreen extends StatefulWidget {
+  const AssistsScreen({super.key});
 
   @override
-  State<PointsScreen> createState() => _PointsScreenState();
+  State<AssistsScreen> createState() => _AssistsScreenState();
 }
 
-class _PointsScreenState extends State<PointsScreen> {
-  void _addPoints(int points) {
+class _AssistsScreenState extends State<AssistsScreen> {
+  void _addAssist() {
     setState(() {
-      PlayerData.totalPoints += points;
-      PlayerData.pointsHistory.add(points);
+      PlayerData.assists += 1;
+      PlayerData.assistsHistory.add(
+        AssistRecord(
+          timestamp: DateTime.now(),
+          key: ValueKey(DateTime.now().millisecondsSinceEpoch),
+        ),
+      );
     });
   }
 
-  void _removeLastPoints() {
-    if (PlayerData.pointsHistory.isNotEmpty) {
+  void _removeAssist(int index) {
+    if (PlayerData.assistsHistory.isNotEmpty && index < PlayerData.assistsHistory.length) {
       setState(() {
-        int lastPoints = PlayerData.pointsHistory.removeLast();
-        PlayerData.totalPoints -= lastPoints;
+        PlayerData.assistsHistory.removeAt(index);
+        PlayerData.assists = PlayerData.assistsHistory.length;
       });
     }
   }
@@ -29,9 +35,9 @@ class _PointsScreenState extends State<PointsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
         title: const Text(
-          'Управление очками',
+          'Ассисты',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         automaticallyImplyLeading: false,
@@ -64,21 +70,21 @@ class _PointsScreenState extends State<PointsScreen> {
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.red, width: 2),
+                border: Border.all(color: Colors.green, width: 2),
               ),
               child: Column(
                 children: [
                   const Text(
-                    'Общее количество очков',
+                    'Количество ассистов',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Colors.green,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${PlayerData.totalPoints}',
+                    '${PlayerData.assists}',
                     style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -90,64 +96,23 @@ class _PointsScreenState extends State<PointsScreen> {
             ),
             const SizedBox(height: 15),
             
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 50,
-                    margin: const EdgeInsets.only(right: 5),
-                    child: ElevatedButton(
-                      onPressed: () => _addPoints(1),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        '+1',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: _addAssist,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
                 ),
-                Expanded(
-                  child: Container(
-                    height: 50,
-                    margin: const EdgeInsets.only(left: 5, right: 5),
-                    child: ElevatedButton(
-                      onPressed: () => _addPoints(2),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        '+2',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                child: const Text(
+                  '+1 ассист',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Expanded(
-                  child: Container(
-                    height: 50,
-                    margin: const EdgeInsets.only(left: 5),
-                    child: ElevatedButton(
-                      onPressed: () => _addPoints(3),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        '+3',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 15),
             
-            // История очков с скроллом
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -155,38 +120,40 @@ class _PointsScreenState extends State<PointsScreen> {
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.red, width: 2),
+                  border: Border.all(color: Colors.green, width: 2),
                 ),
                 child: Column(
                   children: [
                     const Text(
-                      'История забитых очков',
+                      'История ассистов',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        color: Colors.green,
                       ),
                     ),
                     const SizedBox(height: 10),
                     
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            if (PlayerData.pointsHistory.isEmpty)
-                              const Text(
+                      child: PlayerData.assistsHistory.isEmpty
+                          ? const Center(
+                              child: Text(
                                 'История пуста',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey,
                                 ),
-                              )
-                            else
-                              Column(
-                                children: PlayerData.pointsHistory.asMap().entries.map((entry) {
-                                  int index = entry.key;
-                                  int points = entry.value;
-                                  return Container(
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: PlayerData.assistsHistory.length,
+                              itemBuilder: (context, index) {
+                                AssistRecord record = PlayerData.assistsHistory[index];
+
+                                return GestureDetector(
+                                  key: record.key,
+                                  onTap: () => _removeAssist(index),
+                                  child: Container(
                                     width: double.infinity,
                                     margin: const EdgeInsets.only(bottom: 6),
                                     padding: const EdgeInsets.all(8),
@@ -195,32 +162,52 @@ class _PointsScreenState extends State<PointsScreen> {
                                       borderRadius: BorderRadius.circular(6),
                                       border: Border.all(color: Colors.grey[300]!),
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Ассист ${index + 1}:',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const Text(
+                                              '+1 ассист',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
                                         Text(
-                                          'Заброс ${index + 1}:',
+                                          'Время: ${record.fullTimestamp}',
                                           style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12,
+                                            color: Colors.grey,
                                           ),
                                         ),
-                                        Text(
-                                          '+$points очков',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
+                                        const SizedBox(height: 2),
+                                        const Text(
+                                          'Нажмите для удаления',
+                                          style: TextStyle(
+                                            fontSize: 10,
                                             color: Colors.red,
+                                            fontStyle: FontStyle.italic,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  );
-                                }).toList(),
-                              ),
-                          ],
-                        ),
-                      ),
+                                  ),
+                                );
+                              },
+                            ),
                     ),
                     
                     const SizedBox(height: 10),
@@ -229,7 +216,13 @@ class _PointsScreenState extends State<PointsScreen> {
                       width: double.infinity,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed: PlayerData.pointsHistory.isNotEmpty ? _removeLastPoints : null,
+                        onPressed: PlayerData.assistsHistory.isNotEmpty 
+                            ? () {
+                                if (PlayerData.assistsHistory.isNotEmpty) {
+                                  _removeAssist(PlayerData.assistsHistory.length - 1);
+                                }
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                           foregroundColor: Colors.white,

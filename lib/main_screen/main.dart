@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'points_screen.dart';
-import 'number_screen.dart';
-import 'assists_screen.dart';
-import 'injury_screen.dart';
-import 'injury_record.dart';
-import 'assist_record.dart';
+import '../points_screen/points_screen.dart';
+import '../number_screen/number_screen.dart';
+import '../assist_screen/assists_screen.dart';
+import '../injury_screen/injury_screen.dart';
+import '../injury_screen/injury_record.dart';
+import '../assist_screen/assist_record.dart';
 
 void main() {
   runApp(const MyApp());

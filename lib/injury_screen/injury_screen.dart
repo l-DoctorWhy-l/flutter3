@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main_screen/main.dart';
 import 'injury_record.dart';
 
 class InjuryScreen extends StatefulWidget {
