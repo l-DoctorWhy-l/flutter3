@@ -45,6 +45,8 @@ class PlayerProfileScreen extends StatefulWidget {
 }
 
 class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
+  var avatarUrl = "https://static.vecteezy.com/system/resources/previews/027/573/570/non_2x/basketball-player-avatar-icon-on-white-background-vector.jpg";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,13 +62,17 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
         child: Column(
           children: [
             CachedNetworkImage(
-                imageUrl: "test_url",
+                imageUrl: avatarUrl,
+                height: 200,
+                width: 200,
+                fit: BoxFit.fill,
                 progressIndicatorBuilder:(context, url, progress)=>
                 const CircularProgressIndicator(),
                 errorWidget: (context, url, error) =>const Center(
                   child: Icon(
                     Icons.error,
                     color: Colors.red,
+                    size: 100,
                   ),
                 )
             ),
