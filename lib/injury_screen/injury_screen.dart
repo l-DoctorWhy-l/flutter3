@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main_screen/main.dart';
 import 'injury_record.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class InjuryScreen extends StatefulWidget {
   const InjuryScreen({super.key});
@@ -10,6 +11,8 @@ class InjuryScreen extends StatefulWidget {
 }
 
 class _InjuryScreenState extends State<InjuryScreen> {
+  var injuryImageUrl = "https://avatars.mds.yandex.net/i?id=31e9ea7f4e226d025f03783511cde631_l-5338433-images-thumbs&n=13";
+
   void _toggleInjuryStatus() {
     setState(() {
       PlayerData.isInjured = !PlayerData.isInjured;
@@ -68,6 +71,22 @@ class _InjuryScreenState extends State<InjuryScreen> {
                 ),
               ),
             ),
+            CachedNetworkImage(
+                imageUrl: injuryImageUrl,
+                height: 150,
+                width: 150,
+                fit: BoxFit.fill,
+                progressIndicatorBuilder:(context, url, progress)=>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                )
+            ),
+            const SizedBox(height: 15),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(15),
