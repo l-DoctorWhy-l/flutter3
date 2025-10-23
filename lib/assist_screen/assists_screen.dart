@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../main_screen/main.dart';
 import 'assist_record.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AssistsScreen extends StatefulWidget {
   const AssistsScreen({super.key});
@@ -10,6 +11,8 @@ class AssistsScreen extends StatefulWidget {
 }
 
 class _AssistsScreenState extends State<AssistsScreen> {
+  var assistsImageUrl = "https://avatars.mds.yandex.net/i?id=e2bf16d1019f20b61450e2b46ce6c27ebaf5c102-5490649-images-thumbs&n=13";
+
   void _addAssist() {
     setState(() {
       PlayerData.assists += 1;
@@ -64,6 +67,22 @@ class _AssistsScreenState extends State<AssistsScreen> {
                 ),
               ),
             ),
+            CachedNetworkImage(
+                imageUrl: assistsImageUrl,
+                height: 150,
+                width: 150,
+                fit: BoxFit.fill,
+                progressIndicatorBuilder:(context, url, progress)=>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                )
+            ),
+            const SizedBox(height: 15),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(15),
