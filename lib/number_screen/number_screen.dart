@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main_screen/main.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NumberScreen extends StatefulWidget {
   const NumberScreen({super.key});
@@ -9,6 +10,8 @@ class NumberScreen extends StatefulWidget {
 }
 
 class _NumberScreenState extends State<NumberScreen> {
+  var numberImageUrl = "https://avatars.mds.yandex.net/i?id=1763b658ec69055baf20834e72398de1_l-5268818-images-thumbs&n=13";
+
   void _changeNumber(int change) {
     setState(() {
       PlayerData.playerNumber += change;
@@ -35,7 +38,7 @@ class _NumberScreenState extends State<NumberScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
@@ -55,6 +58,22 @@ class _NumberScreenState extends State<NumberScreen> {
                 ),
               ),
             ),
+            CachedNetworkImage(
+                imageUrl: numberImageUrl,
+                height: 150,
+                width: 150,
+                fit: BoxFit.fill,
+                progressIndicatorBuilder:(context, url, progress)=>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                )
+            ),
+            const SizedBox(height: 20),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
