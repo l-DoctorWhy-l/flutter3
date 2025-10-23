@@ -5,6 +5,7 @@ import '../assist_screen/assists_screen.dart';
 import '../injury_screen/injury_screen.dart';
 import '../injury_screen/injury_record.dart';
 import '../assist_screen/assist_record.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,6 +59,17 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            CachedNetworkImage(
+                imageUrl: "test_url",
+                progressIndicatorBuilder:(context, url, progress)=>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                )
+            ),
             Text(
               PlayerData.playerName,
               style: const TextStyle(
