@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main_screen/main.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PointsScreen extends StatefulWidget {
   const PointsScreen({super.key});
@@ -9,6 +10,8 @@ class PointsScreen extends StatefulWidget {
 }
 
 class _PointsScreenState extends State<PointsScreen> {
+  var pointsImageUrl = "https://static.tildacdn.com/stor3065-3031-4638-b735-383834343364/16274927.png";
+
   void _addPoints(int points) {
     setState(() {
       PlayerData.totalPoints += points;
@@ -58,6 +61,22 @@ class _PointsScreenState extends State<PointsScreen> {
                 ),
               ),
             ),
+            CachedNetworkImage(
+                imageUrl: pointsImageUrl,
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+                progressIndicatorBuilder:(context, url, progress)=>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                )
+            ),
+            const SizedBox(height: 15),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(15),
