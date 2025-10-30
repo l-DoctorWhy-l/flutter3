@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import '../points_screen/points_screen.dart';
-import '../number_screen/number_screen.dart';
-import '../assist_screen/assists_screen.dart';
-import '../injury_screen/injury_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../injury_screen/injury_record.dart';
 import '../assist_screen/assist_record.dart';
+import '../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
@@ -16,12 +14,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Статистика баскетболиста',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
       ),
-      home: const PlayerProfileScreen(),
+      routerConfig: AppRouter.router,
     );
   }
 }
@@ -166,10 +164,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                         margin: const EdgeInsets.only(right: 10),
                          child: ElevatedButton(
                            onPressed: () async {
-                             await Navigator.push(
-                               context,
-                               MaterialPageRoute(builder: (context) => const NumberScreen()),
-                             );
+                             context.push(AppRouter.numberRoute);
                              setState(() {});
                            },
                           style: ElevatedButton.styleFrom(
@@ -193,24 +188,16 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
         onTap: (index) {
           switch (index) {
             case 0:
+              context.go(AppRouter.profileRoute);
               break;
             case 1:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const InjuryScreen()),
-              );
+              context.go(AppRouter.injuryRoute);
               break;
             case 2:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const PointsScreen()),
-              );
+              context.go(AppRouter.pointsRoute);
               break;
             case 3:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const AssistsScreen()),
-              );
+              context.go(AppRouter.assistsRoute);
               break;
           }
         },

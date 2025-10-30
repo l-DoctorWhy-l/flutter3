@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../assist_screen/assists_screen.dart';
 import '../main_screen/main.dart';
 import '../points_screen/points_screen.dart';
+import '../app_router.dart';
 import 'injury_record.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -234,24 +236,16 @@ class _InjuryScreenState extends State<InjuryScreen> {
         onTap: (index) {
           switch (index) {
             case 0:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const PlayerProfileScreen()),
-              );
+              context.go(AppRouter.profileRoute);
               break;
             case 1:
+              context.go(AppRouter.injuryRoute);
               break;
             case 2:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const PointsScreen()),
-              );
+              context.go(AppRouter.pointsRoute);
               break;
             case 3:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const AssistsScreen()),
-              );
+              context.go(AppRouter.assistsRoute);
               break;
           }
         },

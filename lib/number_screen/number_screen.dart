@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../main_screen/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -46,7 +47,7 @@ class _NumberScreenState extends State<NumberScreen> {
               margin: const EdgeInsets.only(bottom: 30),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[600],
