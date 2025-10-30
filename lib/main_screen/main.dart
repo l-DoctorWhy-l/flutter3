@@ -168,26 +168,6 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                            onPressed: () async {
                              await Navigator.push(
                                context,
-                               MaterialPageRoute(builder: (context) => const PointsScreen()),
-                             );
-                             setState(() {});
-                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Управление очками'),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 60,
-                        margin: const EdgeInsets.only(left: 10),
-                         child: ElevatedButton(
-                           onPressed: () async {
-                             await Navigator.push(
-                               context,
                                MaterialPageRoute(builder: (context) => const NumberScreen()),
                              );
                              setState(() {});
@@ -202,55 +182,56 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 60,
-                        margin: const EdgeInsets.only(right: 10),
-                         child: ElevatedButton(
-                           onPressed: () async {
-                             await Navigator.push(
-                               context,
-                               MaterialPageRoute(builder: (context) => const AssistsScreen()),
-                             );
-                             setState(() {});
-                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Ассисты'),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 60,
-                        margin: const EdgeInsets.only(left: 10),
-                         child: ElevatedButton(
-                           onPressed: () async {
-                             await Navigator.push(
-                               context,
-                               MaterialPageRoute(builder: (context) => const InjuryScreen()),
-                             );
-                             setState(() {});
-                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Статус травмы'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 0,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              break;
+            case 1:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const InjuryScreen()),
+              );
+              break;
+            case 2:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const PointsScreen()),
+              );
+              break;
+            case 3:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AssistsScreen()),
+              );
+              break;
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Профиль',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.medical_services),
+            label: 'Травмы',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_basketball),
+            label: 'Очки',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.handshake),
+            label: 'Ассисты',
+          ),
+        ],
       ),
     );
   }

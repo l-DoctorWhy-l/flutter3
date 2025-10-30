@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../assist_screen/assists_screen.dart';
 import '../main_screen/main.dart';
+import '../points_screen/points_screen.dart';
 import 'injury_record.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -53,24 +55,6 @@ class _InjuryScreenState extends State<InjuryScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              height: 40,
-              margin: const EdgeInsets.only(bottom: 15),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[600],
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'Назад',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
             CachedNetworkImage(
                 imageUrl: injuryImageUrl,
                 height: 150,
@@ -243,6 +227,52 @@ class _InjuryScreenState extends State<InjuryScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 1,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const PlayerProfileScreen()),
+              );
+              break;
+            case 1:
+              break;
+            case 2:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const PointsScreen()),
+              );
+              break;
+            case 3:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AssistsScreen()),
+              );
+              break;
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Профиль',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.medical_services),
+            label: 'Травмы',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_basketball),
+            label: 'Очки',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.handshake),
+            label: 'Ассисты',
+          ),
+        ],
       ),
     );
   }
