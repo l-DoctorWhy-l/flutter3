@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../main_screen/main.dart';
+import '../app_router.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -22,12 +24,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (_formKey.currentState!.validate()) {
       PlayerData.playerName = _nameController.text.trim();
       
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const PlayerProfileScreen(),
-        ),
-      );
+      context.go(AppRouter.profileRoute);
     }
   }
 
