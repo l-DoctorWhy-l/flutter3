@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../models/player_data.dart';
+import '../cubit/number_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class NumberScreen extends StatefulWidget {
+class NumberScreen extends StatelessWidget {
   const NumberScreen({super.key});
 
   @override
-  State<NumberScreen> createState() => _NumberScreenState();
+  Widget build(BuildContext context) {
+    return const _NumberScreenContent();
+  }
 }
 
-class _NumberScreenState extends State<NumberScreen> {
-  var numberImageUrl = "https://avatars.mds.yandex.net/i?id=1763b658ec69055baf20834e72398de1_l-5268818-images-thumbs&n=13";
+class _NumberScreenContent extends StatelessWidget {
+  const _NumberScreenContent();
 
-  void _changeNumber(int change) {
-    setState(() {
-      PlayerData.playerNumber += change;
-      if (PlayerData.playerNumber < 0) {
-        PlayerData.playerNumber = 0;
-      }
-      if (PlayerData.playerNumber > 99) {
-        PlayerData.playerNumber = 99;
-      }
-    });
+  void _changeNumber(BuildContext context, int change) {
+    context.read<NumberCubit>().changeNumber(change);
   }
 
   @override
   Widget build(BuildContext context) {
+    final numberImageUrl = "https://avatars.mds.yandex.net/i?id=1763b658ec69055baf20834e72398de1_l-5268818-images-thumbs&n=13";
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -75,35 +72,39 @@ class _NumberScreenState extends State<NumberScreen> {
                 )
             ),
             const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.blue, width: 3),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    'Номер игрока',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
+            BlocBuilder<NumberCubit, NumberState>(
+              builder: (context, state) {
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.blue, width: 3),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '${PlayerData.playerNumber}',
-                    style: const TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Номер игрока',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '${state.playerNumber}',
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
             const SizedBox(height: 10),
             
@@ -114,7 +115,7 @@ class _NumberScreenState extends State<NumberScreen> {
                   height: 70,
                   margin: const EdgeInsets.only(bottom: 20),
                   child: ElevatedButton(
-                    onPressed: () => _changeNumber(1),
+                    onPressed: () => _changeNumber(context, 1),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -130,7 +131,7 @@ class _NumberScreenState extends State<NumberScreen> {
                   width: double.infinity,
                   height: 70,
                   child: ElevatedButton(
-                    onPressed: () => _changeNumber(-1),
+                    onPressed: () => _changeNumber(context, -1),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,

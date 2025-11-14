@@ -5,6 +5,7 @@ import '../../../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/player_data.dart';
 import '../../welcome/cubit/welcome_cubit.dart';
+import '../cubit/number_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +16,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WelcomeCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => WelcomeCubit()),
+        BlocProvider(create: (context) => NumberCubit()),
+      ],
       child: MaterialApp.router(
         title: 'Статистика баскетболиста',
         theme: ThemeData(
@@ -107,9 +111,13 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Номер игрока:', style: TextStyle(fontSize: 18)),
-                      Text(
-                          '${PlayerData.playerNumber}',
-                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      BlocBuilder<NumberCubit, NumberState>(
+                        builder: (context, state) {
+                          return Text(
+                            '${state.playerNumber}',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),
+                          );
+                        },
                       ),
                     ],
                   ),
