@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../injury_screen/injury_record.dart';
 import '../assist_screen/assist_record.dart';
 import '../app_router.dart';
+import '../app_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
@@ -14,12 +15,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Статистика баскетболиста',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+    return AppState(
+      playerName: "Кварталов Егор Алексеевич",
+      child: MaterialApp.router(
+        title: 'Статистика баскетболиста',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        ),
+        routerConfig: AppRouter.router,
       ),
-      routerConfig: AppRouter.router,
     );
   }
 }
@@ -75,7 +79,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                 )
             ),
             Text(
-              PlayerData.playerName,
+              AppState.getPlayerName(context),
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
