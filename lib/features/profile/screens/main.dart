@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../models/player_data.dart';
 import '../../welcome/cubit/welcome_cubit.dart';
 import '../cubit/number_cubit.dart';
 import '../../injury/cubit/injury_cubit.dart';
 import '../../assists/cubit/assists_cubit.dart';
+import '../../points/cubit/points_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => NumberCubit()),
         BlocProvider(create: (context) => InjuryCubit()),
         BlocProvider(create: (context) => AssistsCubit()),
+        BlocProvider(create: (context) => PointsCubit()),
       ],
       child: MaterialApp.router(
         title: 'Статистика баскетболиста',
@@ -131,9 +132,13 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Общие очки:', style: TextStyle(fontSize: 18)),
-                      Text(
-                          '${PlayerData.totalPoints}',
-                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      BlocBuilder<PointsCubit, PointsState>(
+                        builder: (context, state) {
+                          return Text(
+                            '${state.totalPoints}',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),
+                          );
+                        },
                       ),
                     ],
                   ),
