@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app_router.dart';
-import '../../../shared/service_locator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/player_data.dart';
+import '../../welcome/cubit/welcome_cubit.dart';
 
 void main() {
-  setupServiceLocator();
   runApp(const MyApp());
 }
 
@@ -15,12 +15,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Статистика баскетболиста',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+    return BlocProvider(
+      create: (context) => WelcomeCubit(),
+      child: MaterialApp.router(
+        title: 'Статистика баскетболиста',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        ),
+        routerConfig: AppRouter.router,
       ),
-      routerConfig: AppRouter.router,
     );
   }
 }
@@ -34,24 +37,6 @@ class PlayerProfileScreen extends StatefulWidget {
 
 class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
   var avatarUrl = "https://static.vecteezy.com/system/resources/previews/027/573/570/non_2x/basketball-player-avatar-icon-on-white-background-vector.jpg";
-  late AppStateService _appStateService;
-
-  @override
-  void initState() {
-    super.initState();
-    _appStateService = getAppStateService();
-    _appStateService.addListener(_onAppStateChanged);
-  }
-
-  @override
-  void dispose() {
-    _appStateService.removeListener(_onAppStateChanged);
-    super.dispose();
-  }
-
-  void _onAppStateChanged() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +67,19 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                   ),
                 )
             ),
-            Text(
-              _appStateService.playerName,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+            BlocBuilder<WelcomeCubit, WelcomeState>(
+              builder: (context, state) {
+                final playerName = state.playerName.trim().isEmpty
+                    ? 'Игрок не указан'
+                    : state.playerName.trim();
+                return Text(
+                  playerName,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 30),
             
