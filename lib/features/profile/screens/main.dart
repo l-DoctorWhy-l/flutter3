@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../models/player_data.dart';
 import '../../welcome/cubit/welcome_cubit.dart';
 import '../cubit/number_cubit.dart';
+import '../../injury/cubit/injury_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => WelcomeCubit()),
         BlocProvider(create: (context) => NumberCubit()),
+        BlocProvider(create: (context) => InjuryCubit()),
       ],
       child: MaterialApp.router(
         title: 'Статистика баскетболиста',
@@ -147,16 +149,20 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                   ),
                   const SizedBox(height: 15),
                   
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Статус:', style: TextStyle(fontSize: 18)),
-                      Text(
-                          PlayerData.isInjured ? 'Травмирован' : 'Здоров',
-                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Статус:', style: TextStyle(fontSize: 18)),
+                          BlocBuilder<InjuryCubit, InjuryState>(
+                            builder: (context, state) {
+                              return Text(
+                                state.isInjured ? 'Травмирован' : 'Здоров',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
                 ],
               ),
             ),
