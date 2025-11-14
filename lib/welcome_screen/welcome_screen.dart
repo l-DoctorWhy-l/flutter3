@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../main_screen/main.dart';
 import '../app_router.dart';
+import '../shared/service_locator.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -13,6 +13,13 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final TextEditingController _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late AppStateService _appStateService;
+
+  @override
+  void initState() {
+    super.initState();
+    _appStateService = getAppStateService();
+  }
 
   @override
   void dispose() {
@@ -22,7 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _navigateToMainScreen() {
     if (_formKey.currentState!.validate()) {
-      PlayerData.playerName = _nameController.text.trim();
+      _appStateService.setPlayerName(_nameController.text.trim());
       
       context.go(AppRouter.profileRoute);
     }

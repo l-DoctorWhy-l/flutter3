@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 import '../injury_screen/injury_record.dart';
 import '../assist_screen/assist_record.dart';
 import '../app_router.dart';
-import '../app_state.dart';
+import '../shared/service_locator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(const MyApp());
 }
 
@@ -15,15 +16,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppState(
-      playerName: "Кварталов Егор Алексеевич",
-      child: MaterialApp.router(
-        title: 'Статистика баскетболиста',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        ),
-        routerConfig: AppRouter.router,
+    return MaterialApp.router(
+      title: 'Статистика баскетболиста',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
       ),
+      routerConfig: AppRouter.router,
     );
   }
 }
@@ -48,6 +46,24 @@ class PlayerProfileScreen extends StatefulWidget {
 
 class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
   var avatarUrl = "https://static.vecteezy.com/system/resources/previews/027/573/570/non_2x/basketball-player-avatar-icon-on-white-background-vector.jpg";
+  late AppStateService _appStateService;
+
+  @override
+  void initState() {
+    super.initState();
+    _appStateService = getAppStateService();
+    _appStateService.addListener(_onAppStateChanged);
+  }
+
+  @override
+  void dispose() {
+    _appStateService.removeListener(_onAppStateChanged);
+    super.dispose();
+  }
+
+  void _onAppStateChanged() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +95,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                 )
             ),
             Text(
-              AppState.getPlayerName(context),
+              _appStateService.playerName,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
