@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../assist_screen/assists_screen.dart';
-import '../injury_screen/injury_screen.dart';
-import '../main_screen/main.dart';
-import '../app_router.dart';
+import '../../assists/screens/assists_screen.dart';
+import '../../injury/screens/injury_screen.dart';
+import '../../profile/models/player_data.dart';
+import '../../../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PointsScreen extends StatefulWidget {

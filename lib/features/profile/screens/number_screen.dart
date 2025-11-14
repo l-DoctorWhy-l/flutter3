@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../main_screen/main.dart';
+import '../models/player_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class NumberScreen extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../app_router.dart';
-import '../shared/service_locator.dart';
+import '../../../app_router.dart';
+import '../../../shared/service_locator.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

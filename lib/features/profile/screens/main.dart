@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../injury_screen/injury_record.dart';
-import '../assist_screen/assist_record.dart';
-import '../app_router.dart';
-import '../shared/service_locator.dart';
+import '../../../app_router.dart';
+import '../../../shared/service_locator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../models/player_data.dart';
 
 void main() {
   setupServiceLocator();
@@ -24,17 +23,6 @@ class MyApp extends StatelessWidget {
       routerConfig: AppRouter.router,
     );
   }
-}
-
-class PlayerData {
-  static String playerName = 'Кварталов Егор Алексеевич';
-  static int playerNumber = 22;
-  static int totalPoints = 0;
-  static int assists = 0;
-  static bool isInjured = false;
-  static List<int> pointsHistory = [];
-  static List<InjuryRecord> injuryHistory = [];
-  static List<AssistRecord> assistsHistory = [];
 }
 
 class PlayerProfileScreen extends StatefulWidget {

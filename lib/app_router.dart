@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'main_screen/main.dart';
-import 'number_screen/number_screen.dart';
-import 'points_screen/points_screen.dart';
-import 'assist_screen/assists_screen.dart';
-import 'injury_screen/injury_screen.dart';
-import 'welcome_screen/welcome_screen.dart';
+import 'features/profile/screens/main.dart';
+import 'features/profile/screens/number_screen.dart';
+import 'features/points/screens/points_screen.dart';
+import 'features/assists/screens/assists_screen.dart';
+import 'features/injury/screens/injury_screen.dart';
+import 'features/welcome/screens/welcome_screen.dart';
 
 class AppRouter {
   static const String welcomeRoute = '/';

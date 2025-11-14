@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../assist_screen/assists_screen.dart';
-import '../main_screen/main.dart';
-import '../points_screen/points_screen.dart';
-import '../app_router.dart';
-import 'injury_record.dart';
+import '../../assists/screens/assists_screen.dart';
+import '../../profile/models/player_data.dart';
+import '../../points/screens/points_screen.dart';
+import '../../../app_router.dart';
+import '../models/injury_record.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class InjuryScreen extends StatefulWidget {
