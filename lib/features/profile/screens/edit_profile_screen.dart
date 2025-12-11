@@ -2,19 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/number_cubit.dart';
+import '../../welcome/cubit/welcome_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class NumberScreen extends StatelessWidget {
-  const NumberScreen({super.key});
+class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _NumberScreenContent();
+    return const _EditProfileScreenContent();
   }
 }
 
-class _NumberScreenContent extends StatelessWidget {
-  const _NumberScreenContent();
+class _EditProfileScreenContent extends StatefulWidget {
+  const _EditProfileScreenContent();
+
+  @override
+  State<_EditProfileScreenContent> createState() => _EditProfileScreenContentState();
+}
+
+class _EditProfileScreenContentState extends State<_EditProfileScreenContent> {
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    final welcomeState = context.read<WelcomeCubit>().state;
+    _nameController = TextEditingController(text: welcomeState.playerName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   void _changeNumber(BuildContext context, int change) {
     context.read<NumberCubit>().changeNumber(change);
@@ -28,12 +49,12 @@ class _NumberScreenContent extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Смена номера',
+          'Редактирование профиля',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -70,6 +91,56 @@ class _NumberScreenContent extends StatelessWidget {
                     size: 100,
                   ),
                 )
+            ),
+            const SizedBox(height: 20),
+            BlocBuilder<WelcomeCubit, WelcomeState>(
+              builder: (context, state) {
+                if (_nameController.text != state.playerName) {
+                  _nameController.text = state.playerName;
+                }
+                return Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.orange, width: 3),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Имя игрока',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Имя баскетболиста',
+                          hintText: 'Введите имя',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                          errorText: state.errorMessage,
+                        ),
+                        style: const TextStyle(fontSize: 18),
+                        textCapitalization: TextCapitalization.words,
+                        onChanged: (value) {
+                          context.read<WelcomeCubit>().updatePlayerName(value);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 20),
             BlocBuilder<NumberCubit, NumberState>(

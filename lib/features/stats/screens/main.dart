@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../welcome/cubit/welcome_cubit.dart';
-import '../cubit/number_cubit.dart';
+import '../../profile/cubit/number_cubit.dart';
 import '../../injury/cubit/injury_cubit.dart';
 import '../../assists/cubit/assists_cubit.dart';
 import '../../points/cubit/points_cubit.dart';
@@ -204,14 +204,14 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                         margin: const EdgeInsets.only(right: 10),
                          child: ElevatedButton(
                            onPressed: () async {
-                             context.push(AppRouter.numberRoute);
+                             context.push(AppRouter.editProfileRoute);
                              setState(() {});
                            },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Text('Смена номера'),
+                          child: const Text('Редактировать профиль'),
                         ),
                       ),
                     ),

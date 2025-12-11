@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'features/profile/screens/main.dart';
-import 'features/profile/screens/number_screen.dart';
+import 'features/stats/screens/main.dart';
+import 'features/profile/screens/edit_profile_screen.dart';
 import 'features/points/screens/points_screen.dart';
 import 'features/assists/screens/assists_screen.dart';
 import 'features/injury/screens/injury_screen.dart';
@@ -11,7 +11,7 @@ import 'features/settings/screens/settings_screen.dart';
 class AppRouter {
   static const String welcomeRoute = '/';
   static const String profileRoute = '/profile';
-  static const String numberRoute = '/number';
+  static const String editProfileRoute = '/edit-profile';
   static const String pointsRoute = '/points';
   static const String assistsRoute = '/assists';
   static const String injuryRoute = '/injury';
@@ -31,9 +31,9 @@ class AppRouter {
         builder: (context, state) => const PlayerProfileScreen(),
       ),
       GoRoute(
-        path: numberRoute,
-        name: 'number',
-        builder: (context, state) => const NumberScreen(),
+        path: editProfileRoute,
+        name: 'edit-profile',
+        builder: (context, state) => const EditProfileScreen(),
       ),
       GoRoute(
         path: pointsRoute,
