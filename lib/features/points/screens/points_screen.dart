@@ -276,7 +276,7 @@ class _PointsScreenContent extends StatelessWidget {
             onTap: (index) {
               switch (index) {
                 case 0:
-                  context.go(AppRouter.profileRoute);
+                  context.go(AppRouter.statsRoute);
                   break;
                 case 1:
                   context.go(AppRouter.injuryRoute);

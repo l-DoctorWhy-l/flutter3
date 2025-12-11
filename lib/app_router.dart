@@ -10,7 +10,7 @@ import 'features/settings/screens/settings_screen.dart';
 
 class AppRouter {
   static const String welcomeRoute = '/';
-  static const String profileRoute = '/profile';
+  static const String statsRoute = '/stats';
   static const String editProfileRoute = '/edit-profile';
   static const String pointsRoute = '/points';
   static const String assistsRoute = '/assists';
@@ -26,8 +26,8 @@ class AppRouter {
         builder: (context, state) => const WelcomeScreen(),
       ),
       GoRoute(
-        path: profileRoute,
-        name: 'profile',
+        path: statsRoute,
+        name: 'stats',
         builder: (context, state) => const PlayerProfileScreen(),
       ),
       GoRoute(

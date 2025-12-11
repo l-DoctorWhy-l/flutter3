@@ -40,7 +40,7 @@ class _WelcomeScreenContentState extends State<_WelcomeScreenContent> {
     return BlocListener<WelcomeCubit, WelcomeState>(
       listener: (context, state) {
         if (state.isValidating && state.isValid) {
-          context.go(AppRouter.profileRoute);
+          context.go(AppRouter.statsRoute);
         }
       },
       child: Scaffold(
