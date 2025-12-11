@@ -57,7 +57,7 @@ class _AssistsScreenContent extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.green, width: 2),
                   ),
@@ -74,10 +74,10 @@ class _AssistsScreenContent extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '${state.assists}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -110,7 +110,7 @@ class _AssistsScreenContent extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.green, width: 2),
                     ),
@@ -128,12 +128,12 @@ class _AssistsScreenContent extends StatelessWidget {
 
                         Expanded(
                           child: state.assistsHistory.isEmpty
-                              ? const Center(
+                              ? Center(
                                   child: Text(
                                     'История пуста',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 )
@@ -155,12 +155,12 @@ class _AssistsScreenContent extends StatelessWidget {
                                         ),
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: Theme.of(context).colorScheme.surface,
                                           borderRadius: BorderRadius.circular(
                                             6,
                                           ),
                                           border: Border.all(
-                                            color: Colors.grey[300]!,
+                                            color: Theme.of(context).colorScheme.outlineVariant,
                                           ),
                                         ),
                                         child: Column(

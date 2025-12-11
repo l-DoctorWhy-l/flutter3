@@ -61,7 +61,7 @@ class _InjuryScreenContent extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.purple, width: 2),
                     ),
@@ -114,7 +114,7 @@ class _InjuryScreenContent extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.purple, width: 2),
                       ),
@@ -131,16 +131,16 @@ class _InjuryScreenContent extends StatelessWidget {
                           const SizedBox(height: 10),
 
                           Expanded(
-                            child: state.injuryHistory.isEmpty
-                                ? const Center(
-                              child: Text(
-                                'История пуста',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
+                          child: state.injuryHistory.isEmpty
+                              ? Center(
+                                child: Text(
+                                  'История пуста',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
-                              ),
-                            )
+                              )
                                 : ListView.builder(
                               itemCount: state.injuryHistory.length,
                               itemBuilder: (context, index) {
@@ -152,10 +152,10 @@ class _InjuryScreenContent extends StatelessWidget {
                                   margin: const EdgeInsets.only(bottom: 6),
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.surface,
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                        color: Colors.grey[300]!),
+                                        color: Theme.of(context).colorScheme.outlineVariant),
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment

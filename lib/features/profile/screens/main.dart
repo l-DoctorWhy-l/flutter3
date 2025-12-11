@@ -8,6 +8,7 @@ import '../cubit/number_cubit.dart';
 import '../../injury/cubit/injury_cubit.dart';
 import '../../assists/cubit/assists_cubit.dart';
 import '../../points/cubit/points_cubit.dart';
+import '../../settings/cubit/settings_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,13 +26,27 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => InjuryCubit()),
         BlocProvider(create: (context) => AssistsCubit()),
         BlocProvider(create: (context) => PointsCubit()),
+        BlocProvider(create: (context) => SettingsCubit()),
       ],
-      child: MaterialApp.router(
-        title: 'Статистика баскетболиста',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        ),
-        routerConfig: AppRouter.router,
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Статистика баскетболиста',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.orange,
+                brightness: Brightness.dark,
+              ),
+              useMaterial3: true,
+            ),
+            themeMode: state.themeMode,
+            routerConfig: AppRouter.router,
+          );
+        },
       ),
     );
   }
@@ -96,7 +111,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: Colors.orange, width: 2),
               ),
@@ -197,6 +212,33 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                             foregroundColor: Colors.white,
                           ),
                           child: const Text('Смена номера'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.push(AppRouter.settingsRoute);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.settings),
+                              SizedBox(width: 8),
+                              Text('Настройки'),
+                            ],
+                          ),
                         ),
                       ),
                     ),

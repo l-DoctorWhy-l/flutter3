@@ -56,7 +56,7 @@ class _PointsScreenContent extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.red, width: 2),
                   ),
@@ -73,10 +73,10 @@ class _PointsScreenContent extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '${state.totalPoints}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -158,7 +158,7 @@ class _PointsScreenContent extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.red, width: 2),
                     ),
@@ -179,11 +179,11 @@ class _PointsScreenContent extends StatelessWidget {
                             child: Column(
                               children: [
                                 if (state.pointsHistory.isEmpty)
-                                  const Text(
+                                  Text(
                                     'История пуста',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     ),
                                   )
                                 else
@@ -194,20 +194,20 @@ class _PointsScreenContent extends StatelessWidget {
                                         .map((entry) {
                                           int index = entry.key;
                                           int points = entry.value;
-                                          return Container(
-                                            width: double.infinity,
-                                            margin: const EdgeInsets.only(
-                                              bottom: 6,
-                                            ),
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                color: Colors.grey[300]!,
-                                              ),
-                                            ),
+                                      return Container(
+                                        width: double.infinity,
+                                        margin: const EdgeInsets.only(
+                                          bottom: 6,
+                                        ),
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.surface,
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          border: Border.all(
+                                            color: Theme.of(context).colorScheme.outlineVariant,
+                                          ),
+                                        ),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment

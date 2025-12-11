@@ -78,7 +78,7 @@ class _NumberScreenContent extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: Colors.blue, width: 3),
                   ),
@@ -95,10 +95,10 @@ class _NumberScreenContent extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(
                         '${state.playerNumber}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 48,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ],
