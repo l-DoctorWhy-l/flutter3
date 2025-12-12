@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app_router.dart';
-import '../models/assist_record.dart';
+import '../../../core/models/assist_model.dart';
 import '../cubit/assists_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -140,11 +140,11 @@ class _AssistsScreenContent extends StatelessWidget {
                               : ListView.builder(
                                   itemCount: state.assistsHistory.length,
                                   itemBuilder: (context, index) {
-                                    AssistRecord record =
+                                    AssistModel record =
                                         state.assistsHistory[index];
 
                                     return GestureDetector(
-                                      key: record.key,
+                                      key: Key(record.id),
                                       onTap: () => context
                                           .read<AssistsCubit>()
                                           .removeAssist(index),
@@ -191,7 +191,7 @@ class _AssistsScreenContent extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              'Время: ${record.fullTimestamp}',
+                                              'Время: ${record.timestamp}',
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.grey,

@@ -9,8 +9,10 @@ import '../../injury/cubit/injury_cubit.dart';
 import '../../assists/cubit/assists_cubit.dart';
 import '../../points/cubit/points_cubit.dart';
 import '../../settings/cubit/settings_cubit.dart';
+import '../../../shared/service_locator.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(const MyApp());
 }
 

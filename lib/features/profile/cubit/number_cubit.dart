@@ -1,4 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/usecases/get_player_profile_usecase.dart';
+import '../../../domain/usecases/save_player_number_usecase.dart';
+import '../../../shared/service_locator.dart';
 
 class NumberState {
   final int playerNumber;
@@ -17,9 +20,25 @@ class NumberState {
 }
 
 class NumberCubit extends Cubit<NumberState> {
-  NumberCubit() : super(const NumberState());
+  final GetPlayerProfileUseCase getPlayerProfile;
+  final SavePlayerNumberUseCase savePlayerNumber;
 
-  void changeNumber(int change) {
+  NumberCubit({
+    GetPlayerProfileUseCase? getPlayerProfile,
+    SavePlayerNumberUseCase? savePlayerNumber,
+  }) : 
+    this.getPlayerProfile = getPlayerProfile ?? getIt<GetPlayerProfileUseCase>(),
+    this.savePlayerNumber = savePlayerNumber ?? getIt<SavePlayerNumberUseCase>(),
+    super(const NumberState()) {
+      _loadNumber();
+    }
+
+  Future<void> _loadNumber() async {
+    final profile = await getPlayerProfile();
+    emit(state.copyWith(playerNumber: profile.number));
+  }
+
+  Future<void> changeNumber(int change) async {
     int newNumber = state.playerNumber + change;
 
     if (newNumber < 0) {
@@ -28,10 +47,11 @@ class NumberCubit extends Cubit<NumberState> {
       newNumber = 99;
     }
 
+    await savePlayerNumber(newNumber);
     emit(state.copyWith(playerNumber: newNumber));
   }
 
-  void setNumber(int number) {
+  Future<void> setNumber(int number) async {
     int newNumber = number;
     
     if (newNumber < 0) {
@@ -40,7 +60,7 @@ class NumberCubit extends Cubit<NumberState> {
       newNumber = 99;
     }
 
+    await savePlayerNumber(newNumber);
     emit(state.copyWith(playerNumber: newNumber));
   }
 }
-

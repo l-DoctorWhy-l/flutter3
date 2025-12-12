@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../assists/screens/assists_screen.dart';
 import '../../points/screens/points_screen.dart';
 import '../../../app_router.dart';
-import '../models/injury_record.dart';
+import '../../../core/models/injury_model.dart';
 import '../cubit/injury_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -144,7 +144,7 @@ class _InjuryScreenContent extends StatelessWidget {
                                 : ListView.builder(
                               itemCount: state.injuryHistory.length,
                               itemBuilder: (context, index) {
-                                InjuryRecord record = state
+                                InjuryModel record = state
                                     .injuryHistory[index];
 
                                 return Container(
@@ -173,7 +173,7 @@ class _InjuryScreenContent extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            record.statusText,
+                                            record.isInjured ? 'Травмирован' : 'Здоров',
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -185,7 +185,7 @@ class _InjuryScreenContent extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'Время: ${record.fullTimestamp}',
+                                        'Время: ${record.timestamp}',
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,

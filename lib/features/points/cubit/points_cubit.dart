@@ -1,8 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/models/point_model.dart';
+import '../../../domain/usecases/get_points_history_usecase.dart';
+import '../../../domain/usecases/add_points_usecase.dart';
+import '../../../domain/usecases/remove_last_points_usecase.dart';
+import '../../../shared/service_locator.dart';
 
 class PointsState {
   final int totalPoints;
-  final List<int> pointsHistory;
+  final List<PointModel> pointsHistory;
 
   const PointsState({
     this.totalPoints = 0,
@@ -11,7 +16,7 @@ class PointsState {
 
   PointsState copyWith({
     int? totalPoints,
-    List<int>? pointsHistory,
+    List<PointModel>? pointsHistory,
   }) {
     return PointsState(
       totalPoints: totalPoints ?? this.totalPoints,
@@ -21,28 +26,41 @@ class PointsState {
 }
 
 class PointsCubit extends Cubit<PointsState> {
-  PointsCubit() : super(const PointsState());
+  final GetPointsHistoryUseCase getPointsHistory;
+  final AddPointsUseCase addPointsUseCase;
+  final RemoveLastPointsUseCase removeLastPointsUseCase;
 
-  void addPoints(int points) {
-    final newHistory = List<int>.from(state.pointsHistory);
-    newHistory.add(points);
+  PointsCubit({
+    GetPointsHistoryUseCase? getPointsHistory,
+    AddPointsUseCase? addPointsUseCase,
+    RemoveLastPointsUseCase? removeLastPointsUseCase,
+  }) : 
+    this.getPointsHistory = getPointsHistory ?? getIt<GetPointsHistoryUseCase>(),
+    this.addPointsUseCase = addPointsUseCase ?? getIt<AddPointsUseCase>(),
+    this.removeLastPointsUseCase = removeLastPointsUseCase ?? getIt<RemoveLastPointsUseCase>(),
+    super(const PointsState()) {
+      _loadPoints();
+    }
 
+  Future<void> _loadPoints() async {
+    final history = await getPointsHistory();
+    int total = history.fold(0, (sum, element) => sum + element.value);
+    
     emit(state.copyWith(
-      totalPoints: state.totalPoints + points,
-      pointsHistory: newHistory,
+      totalPoints: total,
+      pointsHistory: history,
     ));
   }
 
-  void removeLastPoints() {
+  Future<void> addPoints(int points) async {
+    await addPointsUseCase(points);
+    await _loadPoints();
+  }
+
+  Future<void> removeLastPoints() async {
     if (state.pointsHistory.isEmpty) return;
-
-    final newHistory = List<int>.from(state.pointsHistory);
-    final lastPoints = newHistory.removeLast();
-
-    emit(state.copyWith(
-      totalPoints: state.totalPoints - lastPoints,
-      pointsHistory: newHistory,
-    ));
+    
+    await removeLastPointsUseCase();
+    await _loadPoints();
   }
 }
-

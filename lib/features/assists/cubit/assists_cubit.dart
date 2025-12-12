@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/assist_record.dart';
+import '../../../core/models/assist_model.dart';
+import '../../../domain/usecases/get_assists_usecase.dart';
+import '../../../domain/usecases/save_assist_usecase.dart';
+import '../../../domain/usecases/delete_assist_usecase.dart';
+import '../../../shared/service_locator.dart';
 
 class AssistsState {
   final int assists;
-  final List<AssistRecord> assistsHistory;
+  final List<AssistModel> assistsHistory;
 
   const AssistsState({
     this.assists = 0,
@@ -13,7 +16,7 @@ class AssistsState {
 
   AssistsState copyWith({
     int? assists,
-    List<AssistRecord>? assistsHistory,
+    List<AssistModel>? assistsHistory,
   }) {
     return AssistsState(
       assists: assists ?? this.assists,
@@ -23,48 +26,55 @@ class AssistsState {
 }
 
 class AssistsCubit extends Cubit<AssistsState> {
-  AssistsCubit() : super(const AssistsState());
+  final GetAssistsUseCase getAssists;
+  final SaveAssistUseCase saveAssist;
+  final DeleteAssistUseCase deleteAssist;
 
-  void addAssist() {
-    final newHistory = List<AssistRecord>.from(state.assistsHistory);
-    
-    newHistory.add(
-      AssistRecord(
-        timestamp: DateTime.now(),
-        key: ValueKey(DateTime.now().millisecondsSinceEpoch),
-      ),
-    );
+  AssistsCubit({
+    GetAssistsUseCase? getAssists,
+    SaveAssistUseCase? saveAssist,
+    DeleteAssistUseCase? deleteAssist,
+  }) : 
+    this.getAssists = getAssists ?? getIt<GetAssistsUseCase>(),
+    this.saveAssist = saveAssist ?? getIt<SaveAssistUseCase>(),
+    this.deleteAssist = deleteAssist ?? getIt<DeleteAssistUseCase>(),
+    super(const AssistsState()) {
+      _loadAssists();
+    }
 
+  Future<void> _loadAssists() async {
+    final history = await getAssists();
     emit(state.copyWith(
-      assists: newHistory.length,
-      assistsHistory: newHistory,
+      assists: history.length,
+      assistsHistory: history,
     ));
   }
 
-  void removeAssist(int index) {
+  Future<void> addAssist() async {
+    final assist = AssistModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      timestamp: DateTime.now(),
+    );
+
+    await saveAssist(assist);
+    await _loadAssists();
+  }
+
+  Future<void> removeAssist(int index) async {
     if (state.assistsHistory.isEmpty || index < 0 || index >= state.assistsHistory.length) {
       return;
     }
 
-    final newHistory = List<AssistRecord>.from(state.assistsHistory);
-    newHistory.removeAt(index);
-
-    emit(state.copyWith(
-      assists: newHistory.length,
-      assistsHistory: newHistory,
-    ));
+    final assist = state.assistsHistory[index];
+    await deleteAssist(assist.id);
+    await _loadAssists();
   }
 
-  void removeLastAssist() {
+  Future<void> removeLastAssist() async {
     if (state.assistsHistory.isEmpty) return;
-
-    final newHistory = List<AssistRecord>.from(state.assistsHistory);
-    newHistory.removeLast();
-
-    emit(state.copyWith(
-      assists: newHistory.length,
-      assistsHistory: newHistory,
-    ));
+    
+    final assist = state.assistsHistory.last;
+    await deleteAssist(assist.id);
+    await _loadAssists();
   }
 }
-

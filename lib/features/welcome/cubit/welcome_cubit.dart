@@ -1,4 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/usecases/get_player_profile_usecase.dart';
+import '../../../domain/usecases/save_player_name_usecase.dart';
+import '../../../shared/service_locator.dart';
 
 class WelcomeState {
   final String playerName;
@@ -27,7 +30,25 @@ class WelcomeState {
 }
 
 class WelcomeCubit extends Cubit<WelcomeState> {
-  WelcomeCubit() : super(const WelcomeState());
+  final GetPlayerProfileUseCase getPlayerProfile;
+  final SavePlayerNameUseCase savePlayerName;
+
+  WelcomeCubit({
+    GetPlayerProfileUseCase? getPlayerProfile,
+    SavePlayerNameUseCase? savePlayerName,
+  }) : 
+    this.getPlayerProfile = getPlayerProfile ?? getIt<GetPlayerProfileUseCase>(),
+    this.savePlayerName = savePlayerName ?? getIt<SavePlayerNameUseCase>(),
+    super(const WelcomeState()) {
+      _loadName();
+    }
+
+  Future<void> _loadName() async {
+    final profile = await getPlayerProfile();
+    if (profile.name.isNotEmpty) {
+      emit(state.copyWith(playerName: profile.name));
+    }
+  }
 
   void updatePlayerName(String name) {
     final trimmedName = name.trim();
@@ -43,10 +64,16 @@ class WelcomeCubit extends Cubit<WelcomeState> {
       playerName: name,
       errorMessage: errorMessage,
     ));
+
+    // Save if valid, fire and forget to avoid blocking UI typing
+    if (errorMessage == null) {
+      savePlayerName(name);
+    }
   }
 
-  void validateAndNavigate() {
+  Future<void> validateAndNavigate() async {
     if (state.isValid) {
+      await savePlayerName(state.playerName);
       emit(state.copyWith(isValidating: true));
     } else {
       // Показываем ошибку, если валидация не прошла
@@ -68,4 +95,3 @@ class WelcomeCubit extends Cubit<WelcomeState> {
     ));
   }
 }
-

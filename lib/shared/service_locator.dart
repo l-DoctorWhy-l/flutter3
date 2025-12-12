@@ -1,35 +1,87 @@
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
-class AppStateService extends ChangeNotifier {
-  String _playerName = '';
+// Data Sources
+import '../data/datasources/assists/assist_local_datasource.dart';
+import '../data/datasources/injury/injury_local_datasource.dart';
+import '../data/datasources/points/points_local_datasource.dart';
+import '../data/datasources/player/player_local_datasource.dart';
+import '../data/datasources/settings/settings_local_datasource.dart';
 
-  String get playerName => _playerName;
+// Repositories
+import '../domain/repositories/assist_repository.dart';
+import '../data/repositories/assist_repository_impl.dart';
+import '../domain/repositories/injury_repository.dart';
+import '../data/repositories/injury_repository_impl.dart';
+import '../domain/repositories/points_repository.dart';
+import '../data/repositories/points_repository_impl.dart';
+import '../domain/repositories/player_repository.dart';
+import '../data/repositories/player_repository_impl.dart';
+import '../domain/repositories/settings_repository.dart';
+import '../data/repositories/settings_repository_impl.dart';
 
-  void setPlayerName(String name) {
-    if (_playerName != name) {
-      _playerName = name;
-      notifyListeners();
-    }
-  }
-
-  void updatePlayerName(String name) {
-    setPlayerName(name);
-  }
-}
+// Use Cases
+import '../domain/usecases/get_assists_usecase.dart';
+import '../domain/usecases/save_assist_usecase.dart';
+import '../domain/usecases/delete_assist_usecase.dart';
+import '../domain/usecases/get_injury_status_usecase.dart';
+import '../domain/usecases/set_injury_status_usecase.dart';
+import '../domain/usecases/get_points_history_usecase.dart';
+import '../domain/usecases/add_points_usecase.dart';
+import '../domain/usecases/remove_last_points_usecase.dart';
+import '../domain/usecases/get_player_profile_usecase.dart';
+import '../domain/usecases/save_player_name_usecase.dart';
+import '../domain/usecases/save_player_number_usecase.dart';
+import '../domain/usecases/get_settings_usecase.dart';
+import '../domain/usecases/save_theme_mode_usecase.dart';
 
 final getIt = GetIt.instance;
 
 void setupServiceLocator() {
-  getIt.registerSingleton<AppStateService>(AppStateService());
-}
+  // Data Sources
+  getIt.registerLazySingleton(() => AssistLocalDataSource());
+  getIt.registerLazySingleton(() => InjuryLocalDataSource());
+  getIt.registerLazySingleton(() => PointsLocalDataSource());
+  getIt.registerLazySingleton(() => PlayerLocalDataSource());
+  getIt.registerLazySingleton(() => SettingsLocalDataSource());
 
-AppStateService getAppStateService() {
-  if (getIt.isRegistered<AppStateService>()) {
-    return getIt.get<AppStateService>();
-  } else {
-    print('Ошибка: AppStateService не зарегистрирован в GetIt!');
-    setupServiceLocator();
-    return getIt.get<AppStateService>();
-  }
+  // Repositories
+  getIt.registerLazySingleton<AssistRepository>(
+    () => AssistRepositoryImpl(getIt()),
+  );
+  getIt.registerLazySingleton<InjuryRepository>(
+    () => InjuryRepositoryImpl(getIt()),
+  );
+  getIt.registerLazySingleton<PointsRepository>(
+    () => PointsRepositoryImpl(getIt()),
+  );
+  getIt.registerLazySingleton<PlayerRepository>(
+    () => PlayerRepositoryImpl(getIt()),
+  );
+  getIt.registerLazySingleton<SettingsRepository>(
+    () => SettingsRepositoryImpl(getIt()),
+  );
+
+  // Use Cases
+  // Assists
+  getIt.registerLazySingleton(() => GetAssistsUseCase(getIt()));
+  getIt.registerLazySingleton(() => SaveAssistUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteAssistUseCase(getIt()));
+  
+  // Injury
+  getIt.registerLazySingleton(() => GetInjuryStatusUseCase(getIt()));
+  getIt.registerLazySingleton(() => SetInjuryStatusUseCase(getIt()));
+  
+  // Points
+  getIt.registerLazySingleton(() => GetPointsHistoryUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddPointsUseCase(getIt()));
+  getIt.registerLazySingleton(() => RemoveLastPointsUseCase(getIt()));
+  
+  // Player
+  getIt.registerLazySingleton(() => GetPlayerProfileUseCase(getIt()));
+  getIt.registerLazySingleton(() => SavePlayerNameUseCase(getIt()));
+  getIt.registerLazySingleton(() => SavePlayerNumberUseCase(getIt()));
+  
+  // Settings
+  getIt.registerLazySingleton(() => GetSettingsUseCase(getIt()));
+  getIt.registerLazySingleton(() => SaveThemeModeUseCase(getIt()));
 }

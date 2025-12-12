@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app_router.dart';
+import '../../../core/models/point_model.dart';
 import '../cubit/points_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -193,7 +194,7 @@ class _PointsScreenContent extends StatelessWidget {
                                         .entries
                                         .map((entry) {
                                           int index = entry.key;
-                                          int points = entry.value;
+                                          int points = entry.value.value;
                                       return Container(
                                         width: double.infinity,
                                         margin: const EdgeInsets.only(
