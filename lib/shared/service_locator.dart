@@ -32,6 +32,7 @@ import '../domain/usecases/remove_last_points_usecase.dart';
 import '../domain/usecases/get_player_profile_usecase.dart';
 import '../domain/usecases/save_player_name_usecase.dart';
 import '../domain/usecases/save_player_number_usecase.dart';
+import '../domain/usecases/save_player_password_usecase.dart';
 import '../domain/usecases/get_settings_usecase.dart';
 import '../domain/usecases/save_theme_mode_usecase.dart';
 
@@ -83,6 +84,7 @@ void setupServiceLocator(SharedPreferences prefs) {
   // Player
   getIt.registerLazySingleton(() => GetPlayerProfileUseCase(getIt()));
   getIt.registerLazySingleton(() => SavePlayerNameUseCase(getIt()));
+  getIt.registerLazySingleton(() => SavePlayerPasswordUseCase(getIt()));
   getIt.registerLazySingleton(() => SavePlayerNumberUseCase(getIt()));
   
   // Settings

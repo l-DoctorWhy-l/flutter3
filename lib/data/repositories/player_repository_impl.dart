@@ -20,6 +20,11 @@ class PlayerRepositoryImpl implements PlayerRepository {
   }
 
   @override
+  Future<void> savePlayerPassword(String password) async {
+    await dataSource.savePlayerPassword(password);
+  }
+
+  @override
   Future<void> savePlayerNumber(int number) async {
     await dataSource.savePlayerNumber(number);
   }

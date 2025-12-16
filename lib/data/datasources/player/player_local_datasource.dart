@@ -1,20 +1,27 @@
+import '../../../core/helpers/secure_storage_helper.dart';
 import 'player_dto.dart';
 
 class PlayerLocalDataSource {
-  PlayerDto _player = PlayerDto(name: '', number: 22);
+  static const _kNameKey = 'player_name';
+  static const _kPasswordKey = 'player_password';
+  
+  int _number = 22;
 
   Future<PlayerDto> getPlayerProfile() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return _player;
+    final name = await SecureStorageHelper.instance.read(_kNameKey);
+    final password = await SecureStorageHelper.instance.read(_kPasswordKey);
+    return PlayerDto(name: name ?? '', number: _number, password: password);
   }
 
   Future<void> savePlayerName(String name) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _player = _player.copyWith(name: name);
+    await SecureStorageHelper.instance.save(_kNameKey, name);
+  }
+
+  Future<void> savePlayerPassword(String password) async {
+    await SecureStorageHelper.instance.save(_kPasswordKey, password);
   }
 
   Future<void> savePlayerNumber(int number) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _player = _player.copyWith(number: number);
+    _number = number;
   }
 }

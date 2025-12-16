@@ -22,11 +22,13 @@ class _WelcomeScreenContent extends StatefulWidget {
 
 class _WelcomeScreenContentState extends State<_WelcomeScreenContent> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _nameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -55,6 +57,9 @@ class _WelcomeScreenContentState extends State<_WelcomeScreenContent> {
                   builder: (context, state) {
                     if (_nameController.text != state.playerName) {
                       _nameController.text = state.playerName;
+                    }
+                    if (_passwordController.text.isEmpty && state.password.isNotEmpty) {
+                        _passwordController.text = state.password;
                     }
 
                     return Column(
@@ -112,6 +117,34 @@ class _WelcomeScreenContentState extends State<_WelcomeScreenContent> {
                           textCapitalization: TextCapitalization.words,
                           onChanged: (value) {
                             context.read<WelcomeCubit>().updatePlayerName(value);
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Пароль',
+                            hintText: 'Введите пароль',
+                            prefixIcon: const Icon(Icons.lock),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.orange[700]!,
+                                width: 2,
+                              ),
+                            ),
+                            errorText: state.passwordError,
+                          ),
+                          style: const TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            context.read<WelcomeCubit>().updatePassword(value);
                           },
                           onFieldSubmitted: (_) => _navigateToMainScreen(),
                         ),

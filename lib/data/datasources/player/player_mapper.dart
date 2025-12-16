@@ -6,6 +6,7 @@ extension PlayerDtoMapper on PlayerDto {
     return PlayerModel(
       name: name,
       number: number,
+      password: password,
     );
   }
 }
@@ -15,6 +16,7 @@ extension PlayerModelMapper on PlayerModel {
     return PlayerDto(
       name: name,
       number: number,
+      password: password,
     );
   }
 }
