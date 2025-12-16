@@ -1,20 +1,25 @@
+import 'package:sqflite/sqflite.dart';
+import '../../../core/helpers/database_helper.dart';
 import 'assist_dto.dart';
 
 class AssistLocalDataSource {
-  final List<AssistDto> _assists = [];
-
   Future<List<AssistDto>> getAssists() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return List.from(_assists);
+    final db = await DatabaseHelper.instance.database;
+    final result = await db.query('assists', orderBy: 'timestamp DESC');
+    return result.map((json) => AssistDto.fromMap(json)).toList();
   }
 
   Future<void> saveAssist(AssistDto assist) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _assists.add(assist);
+    final db = await DatabaseHelper.instance.database;
+    await db.insert('assists', assist.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> deleteAssist(String id) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _assists.removeWhere((element) => element.id == id);
+    final db = await DatabaseHelper.instance.database;
+    await db.delete(
+      'assists',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

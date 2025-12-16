@@ -1,15 +1,21 @@
+import '../../../core/helpers/database_helper.dart';
 import 'injury_dto.dart';
 
 class InjuryLocalDataSource {
-  InjuryDto _injuryStatus = InjuryDto(isInjured: false, timestamp: DateTime.now());
-
   Future<InjuryDto> getInjuryStatus() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return _injuryStatus;
+    final db = await DatabaseHelper.instance.database;
+    final result = await db.query('injuries', orderBy: 'timestamp DESC', limit: 1);
+    
+    if (result.isNotEmpty) {
+      return InjuryDto.fromMap(result.first);
+    } else {
+      return InjuryDto(isInjured: false, timestamp: DateTime.now());
+    }
   }
 
   Future<void> setInjuryStatus(bool isInjured) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _injuryStatus = InjuryDto(isInjured: isInjured, timestamp: DateTime.now());
+    final db = await DatabaseHelper.instance.database;
+    final injuryDto = InjuryDto(isInjured: isInjured, timestamp: DateTime.now());
+    await db.insert('injuries', injuryDto.toMap());
   }
 }
