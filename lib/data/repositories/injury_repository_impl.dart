@@ -15,6 +15,12 @@ class InjuryRepositoryImpl implements InjuryRepository {
   }
 
   @override
+  Future<List<InjuryModel>> getInjuryHistory() async {
+    final dtos = await dataSource.getInjuryHistory();
+    return dtos.map((dto) => dto.toModel()).toList();
+  }
+
+  @override
   Future<void> setInjuryStatus(bool isInjured) async {
     await dataSource.setInjuryStatus(isInjured);
   }

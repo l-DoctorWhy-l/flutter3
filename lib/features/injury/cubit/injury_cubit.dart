@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/models/injury_model.dart';
 import '../../../domain/usecases/get_injury_status_usecase.dart';
+import '../../../domain/usecases/get_injury_history_usecase.dart';
 import '../../../domain/usecases/set_injury_status_usecase.dart';
 import '../../../shared/service_locator.dart';
 
@@ -26,13 +27,16 @@ class InjuryState {
 
 class InjuryCubit extends Cubit<InjuryState> {
   final GetInjuryStatusUseCase getInjuryStatus;
+  final GetInjuryHistoryUseCase getInjuryHistory;
   final SetInjuryStatusUseCase setInjuryStatus;
 
   InjuryCubit({
     GetInjuryStatusUseCase? getInjuryStatus,
+    GetInjuryHistoryUseCase? getInjuryHistory,
     SetInjuryStatusUseCase? setInjuryStatus,
   }) : 
     this.getInjuryStatus = getInjuryStatus ?? getIt<GetInjuryStatusUseCase>(),
+    this.getInjuryHistory = getInjuryHistory ?? getIt<GetInjuryHistoryUseCase>(),
     this.setInjuryStatus = setInjuryStatus ?? getIt<SetInjuryStatusUseCase>(),
     super(const InjuryState()) {
       _loadStatus();
@@ -40,10 +44,12 @@ class InjuryCubit extends Cubit<InjuryState> {
 
   Future<void> _loadStatus() async {
     final status = await getInjuryStatus();
-    // We don't have history persistence in this simplified architecture, 
-    // so we only load the current status. 
-    // History will start fresh or we could add it to repo if needed.
-    emit(state.copyWith(isInjured: status.isInjured));
+    final history = await getInjuryHistory();
+    
+    emit(state.copyWith(
+      isInjured: status.isInjured,
+      injuryHistory: history,
+    ));
   }
 
   Future<void> toggleInjuryStatus() async {

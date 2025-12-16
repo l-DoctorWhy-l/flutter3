@@ -25,6 +25,7 @@ import '../domain/usecases/get_assists_usecase.dart';
 import '../domain/usecases/save_assist_usecase.dart';
 import '../domain/usecases/delete_assist_usecase.dart';
 import '../domain/usecases/get_injury_status_usecase.dart';
+import '../domain/usecases/get_injury_history_usecase.dart';
 import '../domain/usecases/set_injury_status_usecase.dart';
 import '../domain/usecases/get_points_history_usecase.dart';
 import '../domain/usecases/add_points_usecase.dart';
@@ -74,6 +75,7 @@ void setupServiceLocator(SharedPreferences prefs) {
   
   // Injury
   getIt.registerLazySingleton(() => GetInjuryStatusUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetInjuryHistoryUseCase(getIt()));
   getIt.registerLazySingleton(() => SetInjuryStatusUseCase(getIt()));
   
   // Points
