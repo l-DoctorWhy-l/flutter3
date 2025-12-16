@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Data Sources
 import '../data/datasources/assists/assist_local_datasource.dart';
@@ -36,13 +37,16 @@ import '../domain/usecases/save_theme_mode_usecase.dart';
 
 final getIt = GetIt.instance;
 
-void setupServiceLocator() {
+void setupServiceLocator(SharedPreferences prefs) {
+  // External
+  getIt.registerSingleton<SharedPreferences>(prefs);
+
   // Data Sources
   getIt.registerLazySingleton(() => AssistLocalDataSource());
   getIt.registerLazySingleton(() => InjuryLocalDataSource());
   getIt.registerLazySingleton(() => PointsLocalDataSource());
   getIt.registerLazySingleton(() => PlayerLocalDataSource());
-  getIt.registerLazySingleton(() => SettingsLocalDataSource());
+  getIt.registerLazySingleton(() => SettingsLocalDataSource(getIt()));
 
   // Repositories
   getIt.registerLazySingleton<AssistRepository>(

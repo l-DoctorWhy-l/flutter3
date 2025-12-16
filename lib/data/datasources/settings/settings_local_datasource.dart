@@ -1,15 +1,18 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'settings_dto.dart';
 
 class SettingsLocalDataSource {
-  SettingsDto _settings = SettingsDto(themeModeIndex: 2); // Default to system
+  final SharedPreferences sharedPreferences;
+  static const String _themeModeKey = 'theme_mode';
+
+  SettingsLocalDataSource(this.sharedPreferences);
 
   Future<SettingsDto> getSettings() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return _settings;
+    final themeIndex = sharedPreferences.getInt(_themeModeKey) ?? 2;
+    return SettingsDto(themeModeIndex: themeIndex);
   }
 
   Future<void> saveThemeMode(int modeIndex) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _settings = SettingsDto(themeModeIndex: modeIndex);
+    await sharedPreferences.setInt(_themeModeKey, modeIndex);
   }
 }

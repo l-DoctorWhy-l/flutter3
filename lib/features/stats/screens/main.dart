@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../welcome/cubit/welcome_cubit.dart';
@@ -11,8 +12,10 @@ import '../../points/cubit/points_cubit.dart';
 import '../../settings/cubit/settings_cubit.dart';
 import '../../../shared/service_locator.dart';
 
-void main() {
-  setupServiceLocator();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  setupServiceLocator(prefs);
   runApp(const MyApp());
 }
 
