@@ -1,7 +1,16 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 // Data Sources
+import '../features/nba/data/datasources/balldontlie_api.dart';
+import '../features/nba/data/datasources/thesportsdb_api.dart';
+import '../features/nba/data/repositories/balldontlie_repository_impl.dart';
+import '../features/nba/domain/repositories/balldontlie_repository.dart';
+import '../features/nba/data/repositories/thesportsdb_repository_impl.dart';
+import '../features/nba/domain/repositories/thesportsdb_repository.dart';
+import '../features/nba/presentation/cubit/nba_cubit.dart';
+import '../core/network/api_key_interceptor.dart';
 import '../data/datasources/assists/assist_local_datasource.dart';
 import '../data/datasources/injury/injury_local_datasource.dart';
 import '../data/datasources/points/points_local_datasource.dart';
@@ -42,8 +51,28 @@ final getIt = GetIt.instance;
 void setupServiceLocator(SharedPreferences prefs) {
   // External
   getIt.registerSingleton<SharedPreferences>(prefs);
+  
+  // Dio with Interceptor for Balldontlie
+  getIt.registerLazySingleton<Dio>(() => Dio(), instanceName: 'baseDio');
+  getIt.registerLazySingleton<Dio>(() {
+    final dio = Dio();
+    dio.interceptors.add(ApiKeyInterceptor(apiKey: 'df22acdb-31ba-4d7b-938d-7bda180dfcf1'));
+    return dio;
+  }, instanceName: 'balldontlieDio');
 
   // Data Sources
+  getIt.registerLazySingleton(() => BalldontlieApi(getIt(instanceName: 'balldontlieDio')));
+  getIt.registerLazySingleton(() => TheSportsDbApi(getIt(instanceName: 'baseDio')));
+
+  // Repositories
+  getIt.registerLazySingleton<BalldontlieRepository>(
+    () => BalldontlieRepositoryImpl(getIt()),
+  );
+
+  getIt.registerLazySingleton<TheSportsDbRepository>(
+    () => TheSportsDbRepositoryImpl(getIt()),
+  );
+
   getIt.registerLazySingleton(() => AssistLocalDataSource());
   getIt.registerLazySingleton(() => InjuryLocalDataSource());
   getIt.registerLazySingleton(() => PointsLocalDataSource());
@@ -92,4 +121,7 @@ void setupServiceLocator(SharedPreferences prefs) {
   // Settings
   getIt.registerLazySingleton(() => GetSettingsUseCase(getIt()));
   getIt.registerLazySingleton(() => SaveThemeModeUseCase(getIt()));
+
+  // Cubits
+  getIt.registerFactory(() => NbaCubit(getIt(), getIt()));
 }

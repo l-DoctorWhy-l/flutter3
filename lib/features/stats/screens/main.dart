@@ -10,6 +10,7 @@ import '../../injury/cubit/injury_cubit.dart';
 import '../../assists/cubit/assists_cubit.dart';
 import '../../points/cubit/points_cubit.dart';
 import '../../settings/cubit/settings_cubit.dart';
+import '../../nba/presentation/cubit/nba_cubit.dart';
 import '../../../shared/service_locator.dart';
 
 void main() async {
@@ -32,14 +33,19 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AssistsCubit()),
         BlocProvider(create: (context) => PointsCubit()),
         BlocProvider(create: (context) => SettingsCubit()),
+        BlocProvider(create: (context) => getIt<NbaCubit>()),
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return MaterialApp.router(
             title: 'Статистика баскетболиста',
-            theme: ThemeData(
+            theme:           ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
               useMaterial3: true,
+              bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+                selectedItemColor: Colors.orange,
+                unselectedItemColor: Colors.grey,
+              ),
             ),
             darkTheme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
@@ -271,6 +277,9 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
             case 3:
               context.go(AppRouter.assistsRoute);
               break;
+            case 4:
+              context.go(AppRouter.nbaRoute);
+              break;
           }
         },
         items: const [
@@ -289,6 +298,10 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.handshake),
             label: 'Ассисты',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.api),
+            label: 'API',
           ),
         ],
       ),

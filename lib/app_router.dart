@@ -7,6 +7,7 @@ import 'features/assists/screens/assists_screen.dart';
 import 'features/injury/screens/injury_screen.dart';
 import 'features/welcome/screens/welcome_screen.dart';
 import 'features/settings/screens/settings_screen.dart';
+import 'features/nba/presentation/screens/nba_screen.dart';
 
 class AppRouter {
   static const String welcomeRoute = '/';
@@ -16,6 +17,7 @@ class AppRouter {
   static const String assistsRoute = '/assists';
   static const String injuryRoute = '/injury';
   static const String settingsRoute = '/settings';
+  static const String nbaRoute = '/nba';
 
   static final GoRouter router = GoRouter(
     initialLocation: welcomeRoute,
@@ -54,6 +56,11 @@ class AppRouter {
         path: settingsRoute,
         name: 'settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: nbaRoute,
+        name: 'nba',
+        builder: (context, state) => const NbaScreen(),
       ),
     ],
   );
