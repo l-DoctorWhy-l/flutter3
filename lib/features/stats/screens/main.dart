@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AssistsCubit()),
         BlocProvider(create: (context) => PointsCubit()),
         BlocProvider(create: (context) => SettingsCubit()),
-        BlocProvider(create: (context) => getIt<NbaCubit>()),
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {

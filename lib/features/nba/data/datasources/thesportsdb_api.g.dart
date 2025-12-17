@@ -182,6 +182,32 @@ class _TheSportsDbApi implements TheSportsDbApi {
     return value;
   }
 
+  @override
+  Future<String> getAllSeasons(String leagueId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'id': leagueId};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'api/v1/json/123/search_all_seasons.php',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data!;
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

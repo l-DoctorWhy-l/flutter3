@@ -156,44 +156,6 @@ class _BalldontlieApi implements BalldontlieApi {
     return value;
   }
 
-  @override
-  Future<BalldontlieResponse<BalldontlieSeasonAverageDto>> getSeasonAverages({
-    required int season,
-    required List<int> playerIds,
-  }) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'season': season,
-      r'player_ids[]': playerIds,
-    };
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<BalldontlieResponse<BalldontlieSeasonAverageDto>>(
-            Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-                .compose(
-                  _dio.options,
-                  '/season_averages',
-                  queryParameters: queryParameters,
-                  data: _data,
-                )
-                .copyWith(
-                    baseUrl: _combineBaseUrls(
-                  _dio.options.baseUrl,
-                  baseUrl,
-                ))));
-    final value = BalldontlieResponse<BalldontlieSeasonAverageDto>.fromJson(
-      _result.data!,
-      (json) =>
-          BalldontlieSeasonAverageDto.fromJson(json as Map<String, dynamic>),
-    );
-    return value;
-  }
-
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

@@ -22,4 +22,7 @@ abstract class TheSportsDbApi {
 
   @GET('api/v1/json/123/eventsnext.php')
   Future<Map<String, List<TheSportsDbEventDto>>> getNextEvents(@Query('id') String teamId);
+
+  @GET('api/v1/json/123/search_all_seasons.php')
+  Future<String> getAllSeasons(@Query('id') String leagueId);
 }

@@ -15,10 +15,46 @@ class NbaError extends NbaState {
   NbaError(this.message);
 }
 
-class NbaDataLoaded extends NbaState {
-  final String title;
-  final String data;
-  NbaDataLoaded(this.title, this.data);
+// --- Specific Data States ---
+
+class NbaTeamsLoaded extends NbaState {
+  final List<NbaTeam> teams;
+  NbaTeamsLoaded(this.teams);
+}
+
+class NbaPlayersLoaded extends NbaState {
+  final List<NbaPlayer> players;
+  NbaPlayersLoaded(this.players);
+}
+
+class NbaGamesLoaded extends NbaState {
+  final List<NbaGame> games;
+  NbaGamesLoaded(this.games);
+}
+
+class NbaPlayerDetailLoaded extends NbaState {
+  final NbaPlayer player;
+  NbaPlayerDetailLoaded(this.player);
+}
+
+class NbaLeagueLoaded extends NbaState {
+  final SportsLeague league;
+  final List<String> seasons; // Added
+  NbaLeagueLoaded(this.league, this.seasons);
+}
+
+class NbaTeamDetailLoaded extends NbaState {
+  final SportsTeam team;
+  final List<SportsPlayer> roster;
+  final List<SportsEvent> lastEvents;
+  final List<SportsEvent> nextEvents;
+
+  NbaTeamDetailLoaded({
+    required this.team,
+    required this.roster,
+    required this.lastEvents,
+    required this.nextEvents,
+  });
 }
 
 class NbaCubit extends Cubit<NbaState> {
@@ -28,31 +64,25 @@ class NbaCubit extends Cubit<NbaState> {
   NbaCubit(this._balldontlieRepository, this._theSportsDbRepository)
       : super(NbaInitial());
 
-  // Balldontlie Methods
-  Future<void> fetchPlayers() async {
-    emit(NbaLoading());
-    try {
-      final players = await _balldontlieRepository.getPlayers(1);
-      final data = players
-          .map((e) =>
-              '${e.firstName} ${e.lastName} (${e.position}) - ${e.teamName}')
-          .join('\n');
-      emit(NbaDataLoaded('NBA Players (Balldontlie)', data));
-    } catch (e) {
-      emit(NbaError(e.toString()));
-    }
-  }
+  // --- Lists ---
 
   Future<void> fetchTeams() async {
     emit(NbaLoading());
     try {
       final teams = await _balldontlieRepository.getTeams();
-      final data = teams
-          .map((e) => '${e.fullName} (${e.city}) - ${e.conference}')
-          .join('\n');
-      emit(NbaDataLoaded('NBA Teams (Balldontlie)', data));
+      emit(NbaTeamsLoaded(teams));
     } catch (e) {
-      emit(NbaError(e.toString()));
+      emit(NbaError("Error loading teams: $e"));
+    }
+  }
+
+  Future<void> fetchPlayers() async {
+    emit(NbaLoading());
+    try {
+      final players = await _balldontlieRepository.getPlayers(1);
+      emit(NbaPlayersLoaded(players));
+    } catch (e) {
+      emit(NbaError("Error loading players: $e"));
     }
   }
 
@@ -60,42 +90,37 @@ class NbaCubit extends Cubit<NbaState> {
     emit(NbaLoading());
     try {
       final games = await _balldontlieRepository.getGames(1);
-      final data = games
-          .map((e) =>
-              '${e.date}: ${e.homeTeam} vs ${e.visitorTeam} (${e.homeScore}-${e.visitorScore})')
-          .join('\n');
-      emit(NbaDataLoaded('Recent Games (Balldontlie)', data));
+      emit(NbaGamesLoaded(games));
     } catch (e) {
-      emit(NbaError(e.toString()));
+      emit(NbaError("Error loading games: $e"));
     }
   }
 
-  Future<void> fetchPlayerDetails() async {
+  // --- Details ---
+
+  Future<void> fetchPlayerDetails(int id) async {
     emit(NbaLoading());
     try {
-      final player = await _balldontlieRepository.getPlayerDetails(237);
-      final data = '${player.firstName} ${player.lastName}\nPosition: ${player.position}\nTeam: ${player.teamName}';
-      emit(NbaDataLoaded('Player Details (Balldontlie)', data));
+      final player = await _balldontlieRepository.getPlayerDetails(id);
+      emit(NbaPlayerDetailLoaded(player));
     } catch (e) {
-      emit(NbaError(e.toString()));
+      emit(NbaError("Error loading player details: $e"));
     }
   }
 
-  Future<void> fetchSeasonAverages() async {
-      emit(NbaLoading());
-      await Future.delayed(const Duration(seconds: 1));
-      emit(NbaDataLoaded('Season Averages (Balldontlie)', "Feature requires specific player IDs. Shown as demo placeholder."));
-  }
-
-
-  // TheSportsDB Methods
   Future<void> fetchLeagueDetails() async {
     emit(NbaLoading());
     try {
-      final league = await _theSportsDbRepository.getLeagueDetails('4387');
+      // 4387 is NBA
+      final leagueFuture = _theSportsDbRepository.getLeagueDetails('4387');
+      final seasonsFuture = _theSportsDbRepository.getAllSeasons('4387'); // New Request #10
+
+      final results = await Future.wait([leagueFuture, seasonsFuture]);
+      final league = results[0] as SportsLeague?;
+      final seasons = results[1] as List<String>;
+
       if (league != null) {
-        emit(NbaDataLoaded('League Details (TheSportsDB)',
-            '${league.name} (${league.sport})\n${league.alternateName}'));
+        emit(NbaLeagueLoaded(league, seasons));
       } else {
         emit(NbaError('League not found'));
       }
@@ -104,59 +129,32 @@ class NbaCubit extends Cubit<NbaState> {
     }
   }
 
-  Future<void> fetchTeamDetails() async {
+  Future<void> fetchFullTeamData(String teamName) async {
     emit(NbaLoading());
     try {
-      final team = await _theSportsDbRepository.getTeamDetails('Golden State Warriors');
-      if (team != null) {
-        emit(NbaDataLoaded('Team Details (TheSportsDB)',
-            '${team.name} (${team.shortName})\nStadium: ${team.stadium}\n\n${team.description.substring(0, 200)}...'));
-      } else {
-        emit(NbaError('Team not found'));
+      final team = await _theSportsDbRepository.getTeamDetails(teamName);
+      
+      if (team == null) {
+        emit(NbaError('Team details not found for $teamName'));
+        return;
       }
-    } catch (e) {
-      emit(NbaError(e.toString()));
-    }
-  }
 
-  Future<void> fetchTeamPlayers() async {
-    emit(NbaLoading());
-    try {
-      final players = await _theSportsDbRepository.getTeamPlayers('134865');
-      final data = players
-          .map((e) => '${e.name} - ${e.position} (${e.height}, ${e.weight})')
-          .join('\n');
-      emit(NbaDataLoaded('Team Players (TheSportsDB)', data));
-    } catch (e) {
-      emit(NbaError(e.toString()));
-    }
-  }
+      final teamId = team.id;
+      final results = await Future.wait([
+        _theSportsDbRepository.getTeamPlayers(teamId),
+        _theSportsDbRepository.getLastEvents(teamId),
+        _theSportsDbRepository.getNextEvents(teamId),
+      ]);
 
-  Future<void> fetchLastEvents() async {
-    emit(NbaLoading());
-    try {
-      final events = await _theSportsDbRepository.getLastEvents('134865');
-      final data = events
-          .map((e) =>
-              '${e.date}: ${e.eventName} (${e.homeScore}-${e.awayScore})')
-          .join('\n');
-      emit(NbaDataLoaded('Last Events (TheSportsDB)', data));
-    } catch (e) {
-      emit(NbaError(e.toString()));
-    }
-  }
+      emit(NbaTeamDetailLoaded(
+        team: team,
+        roster: results[0] as List<SportsPlayer>,
+        lastEvents: results[1] as List<SportsEvent>,
+        nextEvents: results[2] as List<SportsEvent>,
+      ));
 
-  Future<void> fetchNextEvents() async {
-    emit(NbaLoading());
-    try {
-      final events = await _theSportsDbRepository.getNextEvents('134865');
-      final data = events
-          .map((e) => '${e.date} ${e.time}: ${e.eventName}')
-          .join('\n');
-      emit(NbaDataLoaded('Next Events (TheSportsDB)', data));
     } catch (e) {
-      emit(NbaError(e.toString()));
+      emit(NbaError("Error loading team full data: $e"));
     }
   }
 }
-

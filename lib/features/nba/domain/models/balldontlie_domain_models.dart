@@ -64,3 +64,18 @@ class NbaStats {
   });
 }
 
+class NbaSeasonStats {
+  final int season;
+  final double pts;
+  final double ast;
+  final double reb;
+  final int gamesPlayed;
+
+  NbaSeasonStats({
+    required this.season,
+    required this.pts,
+    required this.ast,
+    required this.reb,
+    required this.gamesPlayed,
+  });
+}

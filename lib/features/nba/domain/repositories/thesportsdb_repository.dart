@@ -6,5 +6,6 @@ abstract class TheSportsDbRepository {
   Future<List<SportsPlayer>> getTeamPlayers(String teamId);
   Future<List<SportsEvent>> getLastEvents(String teamId);
   Future<List<SportsEvent>> getNextEvents(String teamId);
+  Future<List<String>> getAllSeasons(String leagueId);
 }
 

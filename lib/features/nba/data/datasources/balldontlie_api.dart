@@ -28,10 +28,4 @@ abstract class BalldontlieApi {
 
   @GET('/players/{id}')
   Future<String> getPlayerDetails(@Path('id') int id);
-
-  @GET('/season_averages')
-  Future<BalldontlieResponse<BalldontlieSeasonAverageDto>> getSeasonAverages({
-    @Query('season') required int season,
-    @Query('player_ids[]') required List<int> playerIds,
-  });
 }

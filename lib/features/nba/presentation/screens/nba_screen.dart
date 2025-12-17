@@ -158,7 +158,6 @@ class _ResultDisplay extends StatelessWidget {
               ],
             );
           }
-          return const Center(child: Text('Select an API request to see results'));
         },
       ),
     );

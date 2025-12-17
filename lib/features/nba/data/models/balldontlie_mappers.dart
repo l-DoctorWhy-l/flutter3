@@ -50,3 +50,14 @@ extension BalldontlieStatsDtoMapper on BalldontlieStatsDto {
   }
 }
 
+extension BalldontlieSeasonAverageDtoMapper on BalldontlieSeasonAverageDto {
+  NbaSeasonStats toDomain() {
+    return NbaSeasonStats(
+      season: season,
+      pts: pts,
+      ast: ast,
+      reb: reb,
+      gamesPlayed: gamesPlayed,
+    );
+  }
+}

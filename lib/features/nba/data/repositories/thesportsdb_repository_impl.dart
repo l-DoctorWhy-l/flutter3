@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../../domain/models/thesportsdb_domain_models.dart';
 import '../../domain/repositories/thesportsdb_repository.dart';
 import '../datasources/thesportsdb_api.dart';
@@ -54,6 +55,26 @@ class TheSportsDbRepositoryImpl implements TheSportsDbRepository {
     final events = response['events'];
     if (events != null) {
       return events.map((dto) => dto.toDomain()).toList();
+    }
+    return [];
+  }
+
+  @override
+  Future<List<String>> getAllSeasons(String leagueId) async {
+    try {
+      final responseString = await _api.getAllSeasons(leagueId);
+      final jsonMap = json.decode(responseString);
+      final seasons = jsonMap['seasons'];
+      if (seasons != null) {
+        return (seasons as List)
+            .map((e) => e['strSeason'])
+            .where((e) => e != null)
+            .cast<String>()
+            .toList();
+      }
+    } catch (e) {
+      // Endpoint might be restricted or fail
+      print("Failed to load seasons: $e");
     }
     return [];
   }
