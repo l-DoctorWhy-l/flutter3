@@ -19,12 +19,14 @@ class NbaTeam {
   final String fullName;
   final String city;
   final String conference;
+  final String division;
 
   NbaTeam({
     required this.id,
     required this.fullName,
     required this.city,
     required this.conference,
+    required this.division,
   });
 }
 

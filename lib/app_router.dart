@@ -76,9 +76,10 @@ class AppRouter {
             name: teamDetailsRoute,
             builder: (context, state) {
               final teamName = state.pathParameters['name']!;
+              final teamId = state.extra as int;
               return BlocProvider(
                 create: (context) => getIt<NbaCubit>(),
-                child: TeamDetailsScreen(teamName: teamName),
+                child: TeamDetailsScreen(teamName: teamName, teamId: teamId),
               );
             },
           ),

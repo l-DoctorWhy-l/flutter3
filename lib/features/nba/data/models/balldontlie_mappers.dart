@@ -20,6 +20,7 @@ extension BalldontlieTeamDtoMapper on BalldontlieTeamDto {
       fullName: fullName,
       city: city,
       conference: conference,
+      division: division,
     );
   }
 }

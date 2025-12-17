@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/models/thesportsdb_domain_models.dart';
+import '../../domain/models/balldontlie_domain_models.dart';
 import '../cubit/nba_cubit.dart';
 
 class TeamDetailsScreen extends StatefulWidget {
   final String teamName;
+  final int teamId;
 
-  const TeamDetailsScreen({super.key, required this.teamName});
+  const TeamDetailsScreen({
+    super.key,
+    required this.teamName,
+    required this.teamId,
+  });
 
   @override
   State<TeamDetailsScreen> createState() => _TeamDetailsScreenState();
@@ -16,7 +22,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<NbaCubit>().fetchFullTeamData(widget.teamName);
+    context.read<NbaCubit>().fetchFullTeamData(widget.teamName, widget.teamId);
   }
 
   @override
@@ -43,7 +49,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
       length: 3,
       child: Column(
         children: [
-          _buildTeamHeader(state.team),
+          _buildTeamHeader(state.team, state.balldontlieTeam),
           const TabBar(
             tabs: [
               Tab(text: 'Info'),
@@ -65,7 +71,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
     );
   }
 
-  Widget _buildTeamHeader(SportsTeam team) {
+  Widget _buildTeamHeader(SportsTeam team, NbaTeam? nbaTeam) {
     return Container(
       padding: const EdgeInsets.all(16),
       color: Colors.blueGrey.shade50,
@@ -77,6 +83,14 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text("🏟 ${team.stadium}", style: const TextStyle(fontSize: 16)),
+            ),
+          if (nbaTeam != null)
+             Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                "${nbaTeam.conference} Conference • ${nbaTeam.division} Division",
+                style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+              ),
             ),
         ],
       ),
@@ -140,4 +154,3 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
     );
   }
 }
-

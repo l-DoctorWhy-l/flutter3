@@ -45,12 +45,14 @@ class NbaLeagueLoaded extends NbaState {
 
 class NbaTeamDetailLoaded extends NbaState {
   final SportsTeam team;
+  final NbaTeam? balldontlieTeam;
   final List<SportsPlayer> roster;
   final List<SportsEvent> lastEvents;
   final List<SportsEvent> nextEvents;
 
   NbaTeamDetailLoaded({
     required this.team,
+    this.balldontlieTeam,
     required this.roster,
     required this.lastEvents,
     required this.nextEvents,
@@ -76,10 +78,10 @@ class NbaCubit extends Cubit<NbaState> {
     }
   }
 
-  Future<void> fetchPlayers() async {
+  Future<void> fetchPlayers({String? search}) async {
     emit(NbaLoading());
     try {
-      final players = await _balldontlieRepository.getPlayers(1);
+      final players = await _balldontlieRepository.getPlayers(1, search: search);
       emit(NbaPlayersLoaded(players));
     } catch (e) {
       emit(NbaError("Error loading players: $e"));
@@ -129,7 +131,7 @@ class NbaCubit extends Cubit<NbaState> {
     }
   }
 
-  Future<void> fetchFullTeamData(String teamName) async {
+  Future<void> fetchFullTeamData(String teamName, int balldontlieId) async {
     emit(NbaLoading());
     try {
       final team = await _theSportsDbRepository.getTeamDetails(teamName);
@@ -144,6 +146,7 @@ class NbaCubit extends Cubit<NbaState> {
         _theSportsDbRepository.getTeamPlayers(teamId),
         _theSportsDbRepository.getLastEvents(teamId),
         _theSportsDbRepository.getNextEvents(teamId),
+        _balldontlieRepository.getTeam(balldontlieId),
       ]);
 
       emit(NbaTeamDetailLoaded(
@@ -151,6 +154,7 @@ class NbaCubit extends Cubit<NbaState> {
         roster: results[0] as List<SportsPlayer>,
         lastEvents: results[1] as List<SportsEvent>,
         nextEvents: results[2] as List<SportsEvent>,
+        balldontlieTeam: results[3] as NbaTeam,
       ));
 
     } catch (e) {

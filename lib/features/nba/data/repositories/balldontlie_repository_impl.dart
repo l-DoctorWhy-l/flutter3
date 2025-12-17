@@ -11,8 +11,8 @@ class BalldontlieRepositoryImpl implements BalldontlieRepository {
   BalldontlieRepositoryImpl(this._api);
 
   @override
-  Future<List<NbaPlayer>> getPlayers(int page) async {
-    final response = await _api.getPlayers(page: page);
+  Future<List<NbaPlayer>> getPlayers(int page, {String? search}) async {
+    final response = await _api.getPlayers(page: page, search: search);
     return response.data.map((dto) => dto.toDomain()).toList();
   }
 
@@ -33,6 +33,14 @@ class BalldontlieRepositoryImpl implements BalldontlieRepository {
     final responseString = await _api.getPlayerDetails(id);
     final jsonMap = json.decode(responseString);
     final dto = BalldontliePlayerDto.fromJson(jsonMap['data']);
+    return dto.toDomain();
+  }
+
+  @override
+  Future<NbaTeam> getTeam(int id) async {
+    final responseString = await _api.getTeam(id);
+    final jsonMap = json.decode(responseString);
+    final dto = BalldontlieTeamDto.fromJson(jsonMap['data']);
     return dto.toDomain();
   }
 }

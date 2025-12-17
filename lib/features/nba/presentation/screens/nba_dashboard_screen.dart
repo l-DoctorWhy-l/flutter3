@@ -13,10 +13,18 @@ class NbaDashboardScreen extends StatefulWidget {
 }
 
 class _NbaDashboardScreenState extends State<NbaDashboardScreen> {
+  final TextEditingController _playerSearchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     context.read<NbaCubit>().fetchTeams();
+  }
+
+  @override
+  void dispose() {
+    _playerSearchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,6 +87,7 @@ class _NbaDashboardScreenState extends State<NbaDashboardScreen> {
             context.pushNamed(
               'team-details',
               pathParameters: {'name': team.fullName},
+              extra: team.id,
             );
           },
         );
@@ -87,23 +96,50 @@ class _NbaDashboardScreenState extends State<NbaDashboardScreen> {
   }
 
   Widget _buildPlayersList(List<NbaPlayer> players) {
-    return ListView.builder(
-      itemCount: players.length,
-      itemBuilder: (context, index) {
-        final player = players[index];
-        return ListTile(
-          leading: const CircleAvatar(child: Icon(Icons.person)),
-          title: Text("${player.firstName} ${player.lastName}"),
-          subtitle: Text("${player.position} • ${player.teamName}"),
-          onTap: () {
-            context.pushNamed(
-              'player-details',
-              pathParameters: {'id': player.id.toString()},
-              extra: "${player.firstName} ${player.lastName}",
-            );
-          },
-        );
-      },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _playerSearchController,
+            decoration: InputDecoration(
+              hintText: 'Search player...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _playerSearchController.clear();
+                  context.read<NbaCubit>().fetchPlayers();
+                },
+              ),
+              border: const OutlineInputBorder(),
+            ),
+            onSubmitted: (value) {
+              context.read<NbaCubit>().fetchPlayers(search: value);
+            },
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: players.length,
+            itemBuilder: (context, index) {
+              final player = players[index];
+              return ListTile(
+                leading: const CircleAvatar(child: Icon(Icons.person)),
+                title: Text("${player.firstName} ${player.lastName}"),
+                subtitle: Text("${player.position} • ${player.teamName}"),
+                onTap: () {
+                  context.pushNamed(
+                    'player-details',
+                    pathParameters: {'id': player.id.toString()},
+                    extra: "${player.firstName} ${player.lastName}",
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -175,4 +211,3 @@ class _NbaDashboardScreenState extends State<NbaDashboardScreen> {
     ).whenComplete(() => cubit.fetchTeams());
   }
 }
-

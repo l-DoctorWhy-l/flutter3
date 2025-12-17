@@ -26,6 +26,9 @@ abstract class BalldontlieApi {
     @Query('seasons[]') List<String>? seasons,
   });
 
+  @GET('/teams/{id}')
+  Future<String> getTeam(@Path('id') int id);
+
   @GET('/players/{id}')
   Future<String> getPlayerDetails(@Path('id') int id);
 }
