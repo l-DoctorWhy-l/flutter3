@@ -17,7 +17,26 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path, 
+      version: 2, 
+      onCreate: _createDB,
+      onUpgrade: _onUpgrade,
+    );
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        CREATE TABLE teams ( 
+          id INTEGER PRIMARY KEY, 
+          full_name TEXT NOT NULL,
+          city TEXT NOT NULL,
+          conference TEXT NOT NULL,
+          division TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
   Future _createDB(Database db, int version) async {
@@ -48,6 +67,16 @@ CREATE TABLE injuries (
   timestamp $integerType
   )
 ''');
+
+    await db.execute('''
+CREATE TABLE teams ( 
+  id INTEGER PRIMARY KEY, 
+  full_name TEXT NOT NULL,
+  city TEXT NOT NULL,
+  conference TEXT NOT NULL,
+  division TEXT NOT NULL
+  )
+''');
   }
 
   Future<void> close() async {
@@ -55,4 +84,5 @@ CREATE TABLE injuries (
     db.close();
   }
 }
+
 

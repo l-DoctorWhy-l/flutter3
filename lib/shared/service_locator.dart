@@ -46,6 +46,8 @@ import '../domain/usecases/save_player_password_usecase.dart';
 import '../domain/usecases/get_settings_usecase.dart';
 import '../domain/usecases/save_theme_mode_usecase.dart';
 
+import '../features/nba/data/datasources/nba_local_datasource.dart';
+
 final getIt = GetIt.instance;
 
 void setupServiceLocator(SharedPreferences prefs) {
@@ -63,10 +65,11 @@ void setupServiceLocator(SharedPreferences prefs) {
   // Data Sources
   getIt.registerLazySingleton(() => BalldontlieApi(getIt(instanceName: 'balldontlieDio')));
   getIt.registerLazySingleton(() => TheSportsDbApi(getIt(instanceName: 'baseDio')));
+  getIt.registerLazySingleton(() => NbaLocalDataSource());
 
   // Repositories
   getIt.registerLazySingleton<BalldontlieRepository>(
-    () => BalldontlieRepositoryImpl(getIt()),
+    () => BalldontlieRepositoryImpl(getIt(), getIt()),
   );
 
   getIt.registerLazySingleton<TheSportsDbRepository>(

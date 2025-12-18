@@ -5,10 +5,13 @@ import '../../domain/repositories/balldontlie_repository.dart';
 import '../datasources/balldontlie_api.dart';
 import '../models/balldontlie_mappers.dart';
 
+import '../datasources/nba_local_datasource.dart';
+
 class BalldontlieRepositoryImpl implements BalldontlieRepository {
   final BalldontlieApi _api;
+  final NbaLocalDataSource _localDataSource;
 
-  BalldontlieRepositoryImpl(this._api);
+  BalldontlieRepositoryImpl(this._api, this._localDataSource);
 
   @override
   Future<List<NbaPlayer>> getPlayers(int page, {String? search}) async {
@@ -18,8 +21,18 @@ class BalldontlieRepositoryImpl implements BalldontlieRepository {
 
   @override
   Future<List<NbaTeam>> getTeams() async {
-    final response = await _api.getTeams();
-    return response.data.map((dto) => dto.toDomain()).toList();
+    try {
+      final response = await _api.getTeams();
+      final teams = response.data.map((dto) => dto.toDomain()).toList();
+      await _localDataSource.saveTeams(teams);
+      return teams;
+    } catch (e) {
+      final localTeams = await _localDataSource.getTeams();
+      if (localTeams.isNotEmpty) {
+        return localTeams;
+      }
+      rethrow;
+    }
   }
 
   @override
